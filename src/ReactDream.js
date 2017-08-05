@@ -35,6 +35,8 @@ const ReactDream = Component => ({
   style: style(Component),
 })
 
-export const of = (ReactDream.of = ReactDream)
+ReactDream.of = ReactDream
+
+export const of = ReactDream.of
 
 export default ReactDream
