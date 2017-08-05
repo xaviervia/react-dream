@@ -1,6 +1,5 @@
 const primitivesLists = require('./primitivesLists')
 const fs = require('fs')
-const { tryCatch } = require('ramda')
 
 const generatedCodeWarning = `/* Generated code, from '/scripts/generatePrimitives.js' */
 // Don't do manual modifications, they will be overriden`
