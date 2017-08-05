@@ -1,8 +1,11 @@
 {
   "name": "react-dream",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Fantasy Land type for React Components",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "sagui build",
     "dist": "sagui dist",
@@ -19,8 +22,15 @@
     "type": "git",
     "url": "git+https://github.com/xaviervia/react-dream.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "react",
+    "fantasy-land",
+    "fantasyland",
+    "functional",
+    "functional-programming",
+    "fp"
+  ],
+  "author": "Xavier Via <fernando.via@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/xaviervia/react-dream/issues"
@@ -33,6 +43,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "jest": "^20.0.4",
     "prettier": "^1.5.3",
+    "ramda": "^0.24.1",
     "react": "^16.0.0-beta.3",
     "react-test-renderer": "^16.0.0-beta.3",
     "recompose": "^0.24.0",

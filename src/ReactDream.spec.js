@@ -27,4 +27,13 @@ describe('ReactDream', () => {
       equal(ReactDreamComponent.fork(x => x), Component)
     })
   })
+
+  describe('name', () => {
+    it('sets displayName', () => {
+      const Component = props => <hr />
+      const EnhancedReactDreamComponent = ReactDream(Component).name('Hr')
+
+      equal(EnhancedReactDreamComponent.Component.displayName, 'Hr')
+    })
+  })
 })
