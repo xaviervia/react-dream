@@ -1,8 +1,13 @@
 import compose from 'recompose/compose'
 import setDisplayName from 'recompose/setDisplayName'
+import doAp from './internals/doAp'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
 import styleFromProps from './styleFromProps'
+
+// ap : higherOrderComponent -> ReactDream -> ReactDream
+const ap = higherOrderComponent => ReactDreamComponent =>
+  ReactDream(doAp(higherOrderComponent)(ReactDreamComponent))
 
 // map : Component -> (Component -> Component) -> ReactDream
 const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderComponent)(Component))
@@ -21,6 +26,7 @@ const style = Component => getStyleFromProps =>
 // ReactDream : Component -> ReactDream
 const ReactDream = Component => ({
   Component,
+  ap: ap(Component),
   map: map(Component),
   contramap: contramap(Component),
   fork: fork(Component),

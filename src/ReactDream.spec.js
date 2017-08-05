@@ -12,6 +12,14 @@ describe('ReactDream', () => {
     equal(ReactDreamComponent.Component, Component)
   })
 
+  describe('ap', () => {
+    it('passes the argument to the component', () => {
+      const ReactDreamComponent = ReactDream(x => !x)
+
+      equal(ReactDreamComponent.ap(ReactDream(false)).Component, true)
+    })
+  })
+
   describe('contramap', () => {
     describe('is a referentially transparent function component', () => {
       it('pre composes the propsPreprocesssor', () => {
