@@ -133,8 +133,6 @@ const LayerWithCircle = Svg.Circle
 
 ## API
 
-**[WIP]**
-
 ### The ReactDream type
 
 Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for an explanation of the various algebras.
@@ -184,6 +182,18 @@ H1.fork(Component => render(<Component>Hello</Component>, domElement))
 ```
 
 …will render `<h1>Hello</h1>`
+
+### Built-in Primitives
+
+ReactDream ships with a complete set of HTML and SVG primitives lifted into the type. You can access them like:
+
+```js
+import { Svg, Html } from 'react-dream'
+
+const MyDiv = Html.Div
+
+const MyLayer = Svg.G
+```
 
 ## License
 
