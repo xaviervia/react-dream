@@ -26,6 +26,7 @@ const style = Component => getStyleFromProps =>
 // ReactDream : Component -> ReactDream
 const ReactDream = Component => ({
   Component,
+  chain: f => f(Component),
   ap: ap(Component),
   map: map(Component),
   contramap: contramap(Component),

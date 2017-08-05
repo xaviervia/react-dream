@@ -20,6 +20,17 @@ describe('ReactDream', () => {
     })
   })
 
+  describe('chain', () => {
+    it('calls the argument function with the Component', () => {
+      const ReactDreamComponent = ReactDream(x => x + 1)
+
+      equal(
+        ReactDreamComponent.chain(Component => ReactDream(x => Component(x) + 1)).Component(0),
+        2
+      )
+    })
+  })
+
   describe('contramap', () => {
     describe('is a referentially transparent function component', () => {
       it('pre composes the propsPreprocesssor', () => {
