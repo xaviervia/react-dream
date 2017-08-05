@@ -100,6 +100,17 @@ render(
 )
 ```
 
+### Lifting your own component into ReactDream
+
+For example, for a ReactNative View:
+
+```js
+import { ReactDream } from 'react-dream'
+import { View } from 'react-native'
+
+const DreamView = ReactDream(View)
+```
+
 ## API
 
 **[WIP]**
@@ -114,6 +125,45 @@ ReactDream implements:
 - Contravariant (contramap)
 - Applicative (of, ap)
 - Monad (chain)
+
+Aside from Fantasy Land algebras, ReactDream provides the methods:
+
+#### style(getStyleFromProps)
+
+Takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
+
+```js
+const Title = H1
+  .style(props => ({color: highlighted ? 'red' : 'black'}))
+
+render(
+  <Title
+    highlighted
+    style={{backgroundColor: 'green'}}
+  />,
+  domElement
+)
+```
+
+The resulting style will be: `{ color: 'red', backgroundColor: 'green' }`.
+
+#### name(newDisplayName)
+
+Sets the `displayName` of the component:
+
+```js
+const Tagline = H2.name('tagline')
+```
+
+#### fork(doSomethingWithTheComponent)
+
+Calls the argument function with the actual component in the inside:
+
+```js
+H1.fork(Component => render(<Component>Hello</Component>, domElement))
+```
+
+…will render `<h1>Hello</h1>`
 
 ## License
 
