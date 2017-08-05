@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- '7'
+before_script:
+- npm install
+script:
+- npm test
+deploy:
+  provider: npm
+  email: fernando.via@gmail.com
+  api_key:
+    secure: rm+EaAEFArhvOJhXPSmesp6oH2IRe4+xovWhLa9c8IH5eE3sBmwVd8JmrHRwZQqF3Z2m6EHgNFMJyWAt76UL+4oineyXc3ju+JBGzLZcVqGiAkLz48+LJqHWsenzHn+BAlAFzCYBKCbUtaYl7l68IZZ6krin74NhQkgs//w6GKxng446LncyUU4qQBVzWabR//iYqpjFYvEhPHBCSicjWYzHcm7v+6/kqZJbJxxllGbdA3U8R1wgj79S5bNNC8ylVZKNnGCFcOeg0avXMRNAvlNKRmW41IVv+1cPYh9nTkVBbeW3FYn8xo7Fv39zulDHP1YEfp9tu0N7i5ni7C4spIjHAxrTp9H4ddJ7k15tr2AQwTgIcqwtPH3Xx9Q1JU5bgRrr9shTEd5+x+Tz6Hd00Df6Os2C6huiN/renpaJa/61kowvIXNYNmUMN2M3dptl0y46SaDSlSV3jqK5yyWq/21e9R1FldbcJnRzdv3vksKE3nWp/cqXWx3vbPMeWUjfTvT9K9Le6ZhwHw7g0sReX+9rhFEkMo5ATlaaiw4dGnM7WGSZs1IRNtCYaYKrInT1rLYq0f4gBaNoRD9Ef4yzKrRg4jNFv7W4T6HC7UaNnFizWCZc8pMrD6F1VHHUVJDQBra+ZjgxQyndHQnCDze70oihhpdiEI2gXyguqaABBd8=
+  on:
+    tags: true
+    repo: xaviervia/react-dream
