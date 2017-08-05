@@ -21,9 +21,9 @@ npm install --save react@16.0.0-beta.3 react-dom@16.0.0-beta.3 recompose ramda
 
 ## Usage
 
-**[WIP]**
-
 Here is an extensive example that can be found in [examples](src/examples/index.js):
+
+> If you are not familiar with Fantasy Land types, I can highly recommend the [video tutorials by Brian Lonsdorf](https://egghead.io/instructors/brian-lonsdorf)
 
 ```js
 import React from 'react'
@@ -109,6 +109,26 @@ import { ReactDream } from 'react-dream'
 import { View } from 'react-native'
 
 const DreamView = ReactDream(View)
+```
+
+### Using `chain`
+
+```js
+import { Svg, ReactDream } from 'react-dream'
+
+const wrapWithGLayer = Component => ReactDream(props =>
+  <g>
+    <Component {...props} />
+  </g>
+)
+
+const LayerWithCircle = Svg.Circle
+  .contramap(() => ({
+    r: 5,
+    x: 10,
+    y: 10
+  })
+  .chain(wrapWithGLayer)
 ```
 
 ## API
