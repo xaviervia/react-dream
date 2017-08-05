@@ -5700,6 +5700,15 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-dom@^16.0.0-beta.3:
+  version "16.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.0.0-beta.3.tgz#6b662e8db127d14565b98799c13532044c7768b9"
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.6"
+
 react-test-renderer@^16.0.0-beta.3:
   version "16.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.0.0-beta.3.tgz#334a97818c0fd841bb377da34bc2e5a0284772fb"

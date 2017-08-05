@@ -1,9 +1,25 @@
+# React Dream
+
+Fantasy Land type for React Components
+
+**Caution: Extremely Experimental**
+
+## Installation
+
+```
+npm install --save react-dream
+```
+
+## Usage
+
+Here is an extensive example that can be found in [examples](src/examples/index.js)
+
+```js
 import React from 'react'
 import { render } from 'react-dom'
 import { withHandlers, withState } from 'recompose'
 import { omit } from 'ramda'
-import * as Html from 'react-dream/dist/primitives/html'
-import { of } from 'react-dream/dist/ReactDream'
+import { Html, of } from 'react-dream'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
   <Wrapper {...{ ...props, ...wrapper }}>
@@ -52,13 +68,27 @@ const Header = of(withChildren)
 
 Header.fork(Component =>
   render(
-    <Component title="Hello World" tagline="Of Fantasy Land Types for React" />,
+    <Component
+      title="Hello World"
+      tagline="Of Fantasy Land Types for React"
+    />,
     document.getElementById('root')
   )
 )
+```
 
-// Or
-// render(
-//   <Header.Component title="Hello World" tagline="Of Fantasy Land Types for React" />,
-//   document.getElementById('root')
-// )
+Render part could also be written:
+
+```js
+render(
+  <Header.Component
+    title="Hello World"
+    tagline="Of Fantasy Land Types for React"
+  />,
+  document.getElementById('root')
+)
+```
+
+## License
+
+[MIT](LICENSE)
