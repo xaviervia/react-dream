@@ -50,8 +50,8 @@
     "sagui": "^11.0.2"
   },
   "peerDependencies": {
+    "ramda": "^0.24.1",
     "react": "^15.6.1",
     "recompose": "^0.24.0"
   },
-  "dependencies": {}
 }
