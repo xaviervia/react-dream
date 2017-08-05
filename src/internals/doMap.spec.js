@@ -1,5 +1,5 @@
 import doMap from './doMap'
-import {equal} from 'assert'
+import { equal } from 'assert'
 
 describe('doMap', function() {
   it('run the component through the higher-order component', () => {

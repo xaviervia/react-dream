@@ -1,3 +1,2 @@
 // (Component -> Component) -> Component -> Component
-export default higherOrderComponent => Component =>
-  higherOrderComponent(Component)
+export default higherOrderComponent => Component => higherOrderComponent(Component)
