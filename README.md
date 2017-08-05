@@ -1,6 +1,6 @@
 # React Dream
 
-Fantasy Land type for React Components
+[Fantasy Land]((https://github.com/fantasyland/fantasy-land)) type for React Components
 
 **Caution: Extremely Experimental**
 
@@ -10,9 +10,17 @@ Fantasy Land type for React Components
 npm install --save react-dream
 ```
 
+You will also need a couple of peer dependencies:
+
+```
+npm install --save react@16.0.0-beta.3 react-dom@16.0.0-beta.3 recompose ramda
+```
+
 ## Usage
 
-Here is an extensive example that can be found in [examples](src/examples/index.js)
+**[WIP]**
+
+Here is an extensive example that can be found in [examples](src/examples/index.js):
 
 ```js
 import React from 'react'
@@ -88,6 +96,21 @@ render(
   document.getElementById('root')
 )
 ```
+
+## API
+
+**[WIP]**
+
+### The ReactDream type
+
+Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for an explanation of the various algebras.
+
+ReactDream implements:
+
+- Functor (map)
+- Contravariant (contramap)
+- Applicative (of, ap)
+- Monad (chain)
 
 ## License
 
