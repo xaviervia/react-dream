@@ -1,4 +1,4 @@
-# <img src='react-dream-logo.png' style='width: 100px; margin-right: 10px' /> React Dream
+# ![react-dream-logo](react-dream-logo-small.png) React Dream
 
 [![Build Status](https://travis-ci.org/xaviervia/react-dream.svg)](https://travis-ci.org/xaviervia/react-dream)
 [![npm version](https://img.shields.io/npm/v/react-dream.svg?maxAge=1000)](https://www.npmjs.com/package/react-dream)
