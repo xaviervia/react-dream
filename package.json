@@ -10,7 +10,7 @@
     "build": "sagui build",
     "dist": "babel src/ -d dist/ --ignore spec.js,example/",
     "format": "sagui format",
-    "prepare": "npm run test && npm run dist",
+    "prepare": "npm run dist",
     "start": "sagui develop --port 3000",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "sagui test:lint",
@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/xaviervia/react-dream#readme",
   "devDependencies": {
+    "@klarna/higher-order-components": "^3.0.1",
     "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -45,8 +46,10 @@
     "prettier": "^1.5.3",
     "ramda": "^0.24.1",
     "react": "^16.0.0-beta.3",
+    "react-context-props": "^2.2.0",
     "react-dom": "^16.0.0-beta.3",
     "react-test-renderer": "^16.0.0-beta.3",
+    "react-window-dimensions": "^1.0.1",
     "recompose": "^0.24.0",
     "sagui": "^11.0.2"
   },
@@ -54,8 +57,5 @@
     "ramda": "^0.24.1",
     "react": "^15.6.1",
     "recompose": "^0.24.0"
-  },
-  "dependencies": {
-    "react-window-dimensions": "^1.0.1"
   }
 }

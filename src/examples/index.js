@@ -1,7 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { withHandlers, withState } from 'recompose'
-import { omit } from 'ramda'
 import { Html, of } from '../'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
@@ -25,7 +24,7 @@ const Tagline = Html.P
   .name('Tagline')
 
 const HeaderWrapper = Html.Header
-  .contramap(omit(['clicked', 'updateClicked']))
+  .removeProps('clicked', 'updateClicked')
   .style(({ clicked }) => ({
     backgroundColor: clicked ? 'red' : 'green',
     cursor: 'pointer',
