@@ -21,9 +21,9 @@ npm install --save react@16.0.0-beta.3 react-dom@16.0.0-beta.3 recompose ramda
 
 ## Usage
 
-**[WIP]**
-
 Here is an extensive example that can be found in [examples](src/examples/index.js):
+
+> If you are not familiar with Fantasy Land types, I can highly recommend the [video tutorials by Brian Lonsdorf](https://egghead.io/instructors/brian-lonsdorf)
 
 ```js
 import React from 'react'
@@ -100,9 +100,38 @@ render(
 )
 ```
 
-## API
+### Lifting your own component into ReactDream
 
-**[WIP]**
+For example, for a ReactNative View:
+
+```js
+import { ReactDream } from 'react-dream'
+import { View } from 'react-native'
+
+const DreamView = ReactDream(View)
+```
+
+### Using `chain`
+
+```js
+import { Svg, ReactDream } from 'react-dream'
+
+const wrapWithGLayer = Component => ReactDream(props =>
+  <g>
+    <Component {...props} />
+  </g>
+)
+
+const LayerWithCircle = Svg.Circle
+  .contramap(() => ({
+    r: 5,
+    x: 10,
+    y: 10
+  })
+  .chain(wrapWithGLayer)
+```
+
+## API
 
 ### The ReactDream type
 
@@ -114,6 +143,57 @@ ReactDream implements:
 - Contravariant (contramap)
 - Applicative (of, ap)
 - Monad (chain)
+
+Aside from Fantasy Land algebras, ReactDream provides the methods:
+
+#### style(getStyleFromProps)
+
+Takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
+
+```js
+const Title = H1
+  .style(props => ({color: highlighted ? 'red' : 'black'}))
+
+render(
+  <Title
+    highlighted
+    style={{backgroundColor: 'green'}}
+  />,
+  domElement
+)
+```
+
+The resulting style will be: `{ color: 'red', backgroundColor: 'green' }`.
+
+#### name(newDisplayName)
+
+Sets the `displayName` of the component:
+
+```js
+const Tagline = H2.name('tagline')
+```
+
+#### fork(doSomethingWithTheComponent)
+
+Calls the argument function with the actual component in the inside:
+
+```js
+H1.fork(Component => render(<Component>Hello</Component>, domElement))
+```
+
+…will render `<h1>Hello</h1>`
+
+### Built-in Primitives
+
+ReactDream ships with a complete set of HTML and SVG primitives lifted into the type. You can access them like:
+
+```js
+import { Svg, Html } from 'react-dream'
+
+const MyDiv = Html.Div
+
+const MyLayer = Svg.G
+```
 
 ## License
 
