@@ -357,6 +357,19 @@ H1.fork(Component => render(<Component>Hello</Component>, domElement))
 
 …will render `<h1>Hello</h1>`
 
+#### translate(getTranslateFromProps)
+
+`translate` allows you to easily set up the `transform` style property with the specified displacement. If there is a transform already, `translate` will append to it:
+
+```js
+const Title = Html.H1
+  .translate(props => [30])
+  .translate(props => [null, 30])
+  .translate(props => [null, null, 30])
+```
+
+…will result in `transform: 'translateZ(30px) translateY(30px) translateX(30px)'`
+
 ### Debugging
 
 The downside of chaining method calls is that debugging is not super intuitive. Since there are no statements, it’s not possible to place a `console.log()` or `debugger` call in the middle of the chain without some overhead. To simplify that, two methods for debugging are bundled:

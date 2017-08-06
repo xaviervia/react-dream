@@ -5,6 +5,7 @@ import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
 import doDebug from './internals/doDebug'
 import doLog from './internals/doLog'
+import doTranslate from './internals/doTranslate'
 import styleFromProps from './styleFromProps'
 
 // ALGEBRAS
@@ -57,6 +58,10 @@ const removeProps = Component => (...propsToRemove) =>
     return propsCopy
   })
 
+// translate : Component -> (Props -> [Number]) -> ReactDream
+const translate = Component => getTranslateFromProps =>
+  ReactDream(doTranslate(getTranslateFromProps)(Component))
+
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
   contramap(Component)(styleFromProps(getStyleFromProps))
@@ -82,6 +87,7 @@ const ReactDream = Component => ({
   style: style(Component),
   log: log(Component),
   debug: debug(Component),
+  translate: translate(Component),
 })
 
 ReactDream.of = ReactDream

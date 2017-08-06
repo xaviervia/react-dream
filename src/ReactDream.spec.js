@@ -242,6 +242,92 @@ describe('ReactDream', () => {
     })
   })
 
+  describe('translate', () => {
+    describe('is there is a transform already', () => {
+      it('concatenates this other transform', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentWidth, width }) => [
+          (parentWidth - width) / 2,
+        ])
+
+        const result = Enhanced.Component({
+          parentWidth: 100,
+          width: 20,
+          style: {
+            transform: 'rotate(60deg)',
+          },
+        })
+
+        equal(result.style.transform, 'rotate(60deg) translateX(40px)')
+      })
+    })
+
+    describe('one argument is passed', () => {
+      it('sets the transform to a translate in X', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentWidth, width }) => [
+          (parentWidth - width) / 2,
+        ])
+
+        const result = Enhanced.Component({ parentWidth: 100, width: 20 })
+
+        equal(result.style.transform, 'translateX(40px)')
+      })
+    })
+
+    describe('two arguments are passed', () => {
+      it('sets the transform to a translate in X and Y', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentSize, size }) => [
+          (parentSize - size) / 2,
+          (parentSize - size) / 2,
+        ])
+
+        const result = Enhanced.Component({ parentSize: 100, size: 20 })
+
+        equal(result.style.transform, 'translate(40px, 40px)')
+      })
+
+      describe('the first argument is empty', () => {
+        it('sets the transform to translate only Y', () => {
+          const Enhanced = ReactDream(identity).translate(({ parentHeight, height }) => [
+            null,
+            (parentHeight - height) / 2,
+          ])
+
+          const result = Enhanced.Component({ parentHeight: 100, height: 20 })
+
+          equal(result.style.transform, 'translateY(40px)')
+        })
+      })
+    })
+
+    describe('three arguments are passed', () => {
+      it('sets the transform to a translate in X, Y and Z', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentSize, size }) => [
+          (parentSize - size) / 2,
+          (parentSize - size) / 2,
+          (parentSize - size) / 2,
+        ])
+
+        const result = Enhanced.Component({ parentSize: 100, size: 20 })
+
+        equal(result.style.transform, 'translate3D(40px, 40px, 40px)')
+      })
+
+      describe('the first and second arguments are empty', () => {
+        it('sets the transform to translate only Z', () => {
+          const Enhanced = ReactDream(identity).translate(({ parentHeight, height }) => [
+            null,
+            null,
+            (parentHeight - height) / 2,
+          ])
+
+          const result = Enhanced.Component({ parentHeight: 100, height: 20 })
+
+          equal(result.style.transform, 'translateZ(40px)')
+        })
+      })
+    })
+  })
+
   describe('ReactDream.of', () => {
     it('wraps the Component', () => {
       const Component = x => x
