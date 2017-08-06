@@ -242,6 +242,33 @@ describe('ReactDream', () => {
     })
   })
 
+  describe('rotate', () => {
+    it('adds a rotation set in degrees', () => {
+      const Enhanced = ReactDream(identity).rotate(({ rotation }) => rotation * 360)
+
+      const result = Enhanced.Component({
+        rotation: 0.5,
+      })
+
+      equal(result.style.transform, 'rotate(180deg)')
+    })
+
+    describe('is there is a transform already', () => {
+      it('concatenates this other transform', () => {
+        const Enhanced = ReactDream(identity).rotate(({ rotation }) => rotation * 360)
+
+        const result = Enhanced.Component({
+          rotation: 0.5,
+          style: {
+            transform: 'translate(20px, 20px)',
+          },
+        })
+
+        equal(result.style.transform, 'translate(20px, 20px) rotate(180deg)')
+      })
+    })
+  })
+
   describe('translate', () => {
     describe('is there is a transform already', () => {
       it('concatenates this other transform', () => {

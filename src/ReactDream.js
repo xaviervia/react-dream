@@ -5,6 +5,7 @@ import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
 import doDebug from './internals/doDebug'
 import doLog from './internals/doLog'
+import doRotate from './internals/doRotate'
 import doTranslate from './internals/doTranslate'
 import styleFromProps from './styleFromProps'
 
@@ -62,6 +63,10 @@ const removeProps = Component => (...propsToRemove) =>
 const translate = Component => getTranslateFromProps =>
   ReactDream(doTranslate(getTranslateFromProps)(Component))
 
+// rotate : Component -> (Props -> Number) -> ReactDream
+const rotate = Component => getRotateFromProps =>
+  ReactDream(doRotate(getRotateFromProps)(Component))
+
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
   contramap(Component)(styleFromProps(getStyleFromProps))
@@ -87,6 +92,7 @@ const ReactDream = Component => ({
   style: style(Component),
   log: log(Component),
   debug: debug(Component),
+  rotate: rotate(Component),
   translate: translate(Component),
 })
 
