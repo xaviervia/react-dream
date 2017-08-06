@@ -264,6 +264,50 @@ const Header = Html.H1
 
 Aside from Fantasy Land algebras, ReactDream provides the methods:
 
+#### addProps(getNewProps)
+
+`addProps` allows you to pass a function whose result will be merged with the regular props. This is useful to add derived props to a component:
+
+```js
+import { Svg } from 'react-dream'
+
+const Picture = Svg.Svg
+  .addProps(props => ({
+    viewBox: `0 0 ${props.width} ${props.height}`
+  }))
+
+render(
+  <Picture.Component
+    width={50}
+    height={50}
+  />,
+  domElement
+)
+```
+
+The new props will be merged below the regular ones, so that the consumer can always override your props:
+
+```diff
+import { Svg } from 'react-dream'
+
+const Picture = Svg.Svg
+  .addProps(props => ({
++    // This will be now ignored
+    viewBox: `0 0 ${props.width} ${props.height}`
+  }))
+
+render(
+  <Picture.Component
++    viewBox='0 0 100 100'
+    width={50}
+    height={50}
+  />,
+  domElement
+)
+```
+
+`addProps` is a particular case of `contramap`, and it is implemented internally with `contramap`.
+
 #### style(getStyleFromProps)
 
 Takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
