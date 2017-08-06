@@ -357,6 +357,50 @@ H1.fork(Component => render(<Component>Hello</Component>, domElement))
 
 …will render `<h1>Hello</h1>`
 
+### Debugging
+
+The downside of chaining method calls is that debugging is not super intuitive. Since there are no statements, it’s not possible to place a `console.log()` or `debugger` call in the middle of the chain without some overhead. To simplify that, two methods for debugging are bundled:
+
+#### log(text)
+
+Whenever the Component is called with new props, it will print:
+
+- The custom text
+- The component displayName
+- The current props
+
+Pretty useful to debug what exactly is happening in the chain:
+
+```js
+const Title = Html.H1
+  .log('what gets to the H1?')
+  .contramap(({hovered, label}) => ({
+    children: hovered ? 'Hovered!' : label
+  }))
+  .log('is there a label before the contramap?')
+  .name('Title')
+  .log('does it also get a label from outside?')
+
+render(
+  <Title.Component hovered label='Label from outside' />,
+  domElement
+)
+```
+
+Each time the `Title.Component` is re rendered, this will print, in this order:
+
+1. `'does it also get a label from outside?', 'Title', { label: 'Label from outside', hovered: true }`
+2. `'is there a label before the contramap?', 'H1', { label: 'Label from outside', hovered: true }`
+3. `'what gets to the H1?', 'H1', { label: 'Hovered!' }`
+
+#### debug()
+
+**Be careful. Dangerous**
+
+This last-resort method allows you to inject a `debugger` statement at that point in the change. The result will allow you to inspect the Component and its props in the higher order component.
+
+It will be called on each render of the component.
+
 ### Built-in Primitives
 
 ReactDream ships with a complete set of HTML and SVG primitives lifted into the type. You can access them like:

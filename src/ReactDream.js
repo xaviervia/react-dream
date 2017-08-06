@@ -3,6 +3,8 @@ import setDisplayName from 'recompose/setDisplayName'
 import doAp from './internals/doAp'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
+import doDebug from './internals/doDebug'
+import doLog from './internals/doLog'
 import styleFromProps from './styleFromProps'
 
 // ALGEBRAS
@@ -34,6 +36,12 @@ const addProps = Component => getPropsToAdd =>
 
 // fork : Component -> (Component -> a) -> a
 const fork = Component => extractComponent => extractComponent(Component)
+
+// debug : Component -> () -> IO ReactDream
+const debug = Component => () => ReactDream(doDebug(Component))
+
+// log : Component -> String -> IO ReactDream
+const log = Component => text => ReactDream(doLog(text)(Component))
 
 // name : Component -> String -> ReactDream
 const name = Component => compose(map(Component), setDisplayName)
@@ -72,6 +80,8 @@ const ReactDream = Component => ({
   name: name(Component),
   removeProps: removeProps(Component),
   style: style(Component),
+  log: log(Component),
+  debug: debug(Component),
 })
 
 ReactDream.of = ReactDream
