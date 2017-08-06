@@ -1,4 +1,4 @@
-![react-dream-logo](banner.png)
+![react-dream-logo](banner2.png)
 
 # React Dream
 
