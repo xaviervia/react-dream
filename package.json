@@ -1,6 +1,6 @@
 {
   "name": "react-dream",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Fantasy Land type for React Components",
   "main": "dist/index.js",
   "files": [
