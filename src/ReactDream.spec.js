@@ -214,6 +214,34 @@ describe('ReactDream', () => {
     })
   })
 
+  describe('addProps', () => {
+    it('merges with the props from the returned object, letting outside props override', () => {
+      const ReactDreamComponent = ReactDream(identity)
+      const Enhanced = ReactDreamComponent.addProps(props => ({
+        a: 1,
+        b: 2,
+      }))
+
+      const result = Enhanced.Component({ b: 3, c: 4 })
+
+      equal(result.a, 1)
+      equal(result.b, 3)
+      equal(result.c, 4)
+    })
+  })
+
+  describe('removeProps', () => {
+    it('removes the specified props', () => {
+      const ReactDreamComponent = ReactDream(identity)
+      const Enhanced = ReactDreamComponent.removeProps('hovered', 'focused')
+      const result = Enhanced.Component({ hovered: true, focused: true, pressed: true })
+
+      equal(result.hovered, undefined)
+      equal(result.focused, undefined)
+      equal(result.pressed, true)
+    })
+  })
+
   describe('ReactDream.of', () => {
     it('wraps the Component', () => {
       const Component = x => x

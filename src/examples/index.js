@@ -2,8 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { withHandlers, withState } from 'recompose'
 import { omit } from 'ramda'
-import * as Html from 'react-dream/dist/primitives/html'
-import { of } from 'react-dream/dist/ReactDream'
+import { Html, of } from '../'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
   <Wrapper {...{ ...props, ...wrapper }}>
