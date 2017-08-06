@@ -308,6 +308,18 @@ render(
 
 `addProps` is a particular case of `contramap`, and it is implemented internally with `contramap`.
 
+#### removeProps(...propNamesToRemove)
+
+`removeProps` filters out props. Very useful to avoid the React warnings of unrecognized props.
+
+```js
+const ButtonWithStates = Html.Button
+  .removeProps('hovered', 'pressed')
+  .style(({hovered, pressed}) => ({
+    color: pressed ? 'red' : (hovered ? 'orange' : 'black')
+  }))
+```
+
 #### style(getStyleFromProps)
 
 Takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
