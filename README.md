@@ -1,4 +1,6 @@
-# ![react-dream-logo](small.png) React Dream
+![react-dream-logo](banner.png)
+
+# React Dream
 
 [![Build Status](https://travis-ci.org/xaviervia/react-dream.svg)](https://travis-ci.org/xaviervia/react-dream)
 [![npm version](https://img.shields.io/npm/v/react-dream.svg?maxAge=1000)](https://www.npmjs.com/package/react-dream)
