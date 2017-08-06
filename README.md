@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/xaviervia/react-dream.svg)](https://travis-ci.org/xaviervia/react-dream)
 [![npm version](https://img.shields.io/npm/v/react-dream.svg?maxAge=1000)](https://www.npmjs.com/package/react-dream)
 
-[Fantasy Land]((https://github.com/fantasyland/fantasy-land)) type for React Components
+[Fantasy Land](https://github.com/fantasyland/fantasy-land) type for React Components
 
 **Caution: Extremely Experimental**
 
@@ -144,6 +144,124 @@ ReactDream implements:
 - Applicative (of, ap)
 - Monad (chain)
 
+In particular:
+
+#### map
+
+`map` allows to wrap the function with regular higher-order components, such as the ones provided by [recompose](https://github.com/acdlite/recompose).
+
+```js
+import React from 'react'
+import { ReactDream } from 'react-dream'
+import { withHandlers, withState } from 'recompose'
+
+const Counter = ReactDream(({counter, onClick}) =>
+  <div>
+    <button onClick={onClick}>Add 1</button>
+    <p>{counter}</p>
+  </div>
+)
+  .map(
+    withHandlers({
+      onClick: ({ counter, updateCount }) => () => updateCount(counter + 1),
+    })
+  )
+  .map(withState('counter', 'updateCount', 0))
+```
+
+This is because `map` expects a function from `a -> b` in the general case but from `Component -> a` in this particular case since holding components is the intended usage of ReactDream. Higher-order components are functions from `Component -> Component`, so they perfectly fit the bill.
+
+#### contramap
+
+`contramap` allows to preprocess props before they reach the component.
+
+```js
+const Title = H1
+  .contramap(({label}) => ({
+    children: label
+  }))
+  .name('Title')
+
+render(
+  <Title.Component
+    label='This will be the content now'
+  />,
+  domElement
+)
+```
+
+This is a common pattern for higher-order Components, and the key advantage of using `contramap` instead of `map` for this purpose is that if the wrapped component is a stateless, function component, you avoid an unnecessary call to React. Another advantage is that functions passed to `contramap` as an argument are simply pure functions, without mentioning React at all, with the signature `Props -> Props`.
+
+#### ap + of
+
+`ap` allows you to apply a higher-order components to regular components, and `of` allows you to lift any value to `ReactDream`, which is useful for lifting higher-order components.
+
+Applying second-order components (`Component -> Component`) can also be done with `map`: where `ap` shines is in allowing you to apply a higher-order component that takes two or more components (third or higher order, such as `Component -> Component -> Component -> Component`), that is otherwise not possible with `map`. This makes it possible to abstract control flow or composition patterns in higher-order components:
+
+**Control flow example**
+```js
+const eitherLeftOrRight = Left => Right => ({left, ...props}) =>
+  left
+    ? <Left {...props} />
+    : <Right {...props} />
+
+const TitleOrSubtitle = of(eitherLeftOrRight)
+  .ap(Html.H1)
+  .ap(Html.H2)
+  .addProps({isTitle} => ({
+    left: isTitle
+  }))
+
+render(
+  <TitleOrSubtitle.Component isTitle={true}>
+    This will be an H1 title
+  </TitleOrSubtitle.Component>
+  , domElement
+)
+```
+
+**Parent-children pattern example**
+
+```js
+const withChildren = North => South => Wrapper => ({north, south, wrapper, ...props}) =>
+  <Wrapper {...{...props, ...wrapper}}>
+    <North {...{...props, ...north}} />
+    <South {...{...props, ...south}} />
+  </Wrapper>
+
+const PageHeader = of(withChildren)
+  .ap(Html.H1)
+  .ap(Html.P)
+  .ap(Html.Header)
+  .addProps({title, subtitle} => ({
+    north: { children: title },
+    south: { children: subtitle },
+  }))
+
+render(
+  <PageHeader.Component
+    title='Hello World'
+    subtitle='Lorem ipsum dolor sit amet et consectetur'
+  />
+  , domElement
+)
+```
+
+#### chain
+`chain` is useful as a escape hatch if you want to escape from ReactDream and do something very React-y
+
+```js
+const Header = Html.H1
+  .chain(H1Component => ReactDream(({title, subtitle}) =>
+    <header>
+      <H1Component>
+        {title}
+      </H1Component>
+      <h2>{subtitle}</h2>
+    </header>
+  ))
+```
+
 Aside from Fantasy Land algebras, ReactDream provides the methods:
 
 #### style(getStyleFromProps)
@@ -151,7 +269,7 @@ Aside from Fantasy Land algebras, ReactDream provides the methods:
 Takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
 
 ```js
-const Title = H1
+const Title = Html.H1
   .style(props => ({color: highlighted ? 'red' : 'black'}))
 
 render(
