@@ -139,8 +139,7 @@ Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for an explana
 
 ReactDream implements:
 
-- Functor (map)
-- Contravariant (contramap)
+- Profunctor (map, contramap, promap)
 - Applicative (of, ap)
 - Monad (chain)
 
@@ -191,6 +190,18 @@ render(
 ```
 
 This is a common pattern for higher-order Components, and the key advantage of using `contramap` instead of `map` for this purpose is that if the wrapped component is a stateless, function component, you avoid an unnecessary call to React. Another advantage is that functions passed to `contramap` as an argument are simply pure functions, without mentioning React at all, with the signature `Props -> Props`.
+
+#### promap
+
+`promap` can be thought of as a shorthand for doing `contramap` and `map` at the same time. The first argument to it is the function that is going to be used to `contramap` and the second is the one to be used to `map`:
+
+```js
+const Header = Html.Div
+  .promap(
+    ({title}) => ({children: title}),
+    setDisplayName('Header')
+  )
+```
 
 #### ap + of
 
@@ -356,6 +367,53 @@ H1.fork(Component => render(<Component>Hello</Component>, domElement))
 ```
 
 …will render `<h1>Hello</h1>`
+
+#### rotate(getRotateFromProps)
+
+`rotate` sets up a style `transform` property with the specified rotation, in degrees. If there is a transform already, `rotate` will append to it:
+
+```js
+const Title = Html.H1
+  .rotate(props => 45)
+
+render(
+  <Title.Component style={{ transform: 'translateX(20px)' }} />,
+  document.getElementById('root')
+)
+```
+
+…will result in `transform: 'translateX(20px) rotate(45px)'`
+
+> Just a reminder: rotations start from the top left edge as the axis, which is rarely what one wants. If you want the rotation to happen from the center, you can set `transform-origin: 'center'`, that with ReactDream would be `.style(props => ({transformOrigin: 'center'}))`.
+
+#### scale(getRotateFromProps)
+
+`scale` sets up a style `transform` property with the specified scaling factor. If there is a transform already, `scale` will append to it:
+
+```js
+const Title = Html.H1
+  .scale(props => 1.5)
+
+render(
+  <Title.Component style={{ transform: 'translateX(20px)' }} />,
+  document.getElementById('root')
+)
+```
+
+…will result in `transform: 'translateX(20px) scale(1.5)'`
+
+#### translate(getTranslateFromProps)
+
+`translate` allows you to easily set up the `transform` style property with the specified displacement. If there is a transform already, `translate` will append to it:
+
+```js
+const Title = Html.H1
+  .translate(props => [30])
+  .translate(props => [null, 30])
+  .translate(props => [null, null, 30])
+```
+
+…will result in `transform: 'translateZ(30px) translateY(30px) translateX(30px)'`
 
 ### Debugging
 

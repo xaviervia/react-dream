@@ -167,6 +167,28 @@ describe('ReactDream', () => {
     })
   })
 
+  describe('promap', () => {
+    it('passes the Component through the higher-order Component and the props preprocessor', () => {
+      const propsPreprocessor = () => ({ name: 'Radiohead' })
+      const higherOrderComponent = Target => ({ name }) =>
+        <div>
+          <Target>
+            {name}
+          </Target>
+        </div>
+
+      const Enhanced = ReactDream(props => <h1 {...props} />).promap(
+        propsPreprocessor,
+        higherOrderComponent
+      )
+
+      const renderer = create(<Enhanced.Component />)
+
+      equal(renderer.toJSON().type, 'div')
+      equal(renderer.toJSON().children[0].props.name, 'Radiohead')
+    })
+  })
+
   describe('fork', () => {
     it('exposes the inner Component to the passed in function', () => {
       const Component = props => <hr />
@@ -239,6 +261,146 @@ describe('ReactDream', () => {
       equal(result.hovered, undefined)
       equal(result.focused, undefined)
       equal(result.pressed, true)
+    })
+  })
+
+  describe('rotate', () => {
+    it('adds a rotation set in degrees', () => {
+      const Enhanced = ReactDream(identity).rotate(({ rotation }) => rotation * 360)
+
+      const result = Enhanced.Component({
+        rotation: 0.5,
+      })
+
+      equal(result.style.transform, 'rotate(180deg)')
+    })
+
+    describe('is there is a transform already', () => {
+      it('concatenates this other transform', () => {
+        const Enhanced = ReactDream(identity).rotate(({ rotation }) => rotation * 360)
+
+        const result = Enhanced.Component({
+          rotation: 0.5,
+          style: {
+            transform: 'translate(20px, 20px)',
+          },
+        })
+
+        equal(result.style.transform, 'translate(20px, 20px) rotate(180deg)')
+      })
+    })
+  })
+
+  describe('scale', () => {
+    it('adds a scaling factor', () => {
+      const Enhanced = ReactDream(identity).scale(({ big }) => (big ? 2 : 1))
+
+      const result = Enhanced.Component({
+        big: true,
+      })
+
+      equal(result.style.transform, 'scale(2)')
+    })
+
+    describe('is there is a transform already', () => {
+      it('concatenates this other transform', () => {
+        const Enhanced = ReactDream(identity).scale(({ big }) => (big ? 2 : 1))
+
+        const result = Enhanced.Component({
+          big: true,
+          style: {
+            transform: 'translate(20px, 20px)',
+          },
+        })
+
+        equal(result.style.transform, 'translate(20px, 20px) scale(2)')
+      })
+    })
+  })
+
+  describe('translate', () => {
+    describe('is there is a transform already', () => {
+      it('concatenates this other transform', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentWidth, width }) => [
+          (parentWidth - width) / 2,
+        ])
+
+        const result = Enhanced.Component({
+          parentWidth: 100,
+          width: 20,
+          style: {
+            transform: 'rotate(60deg)',
+          },
+        })
+
+        equal(result.style.transform, 'rotate(60deg) translateX(40px)')
+      })
+    })
+
+    describe('one argument is passed', () => {
+      it('sets the transform to a translate in X', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentWidth, width }) => [
+          (parentWidth - width) / 2,
+        ])
+
+        const result = Enhanced.Component({ parentWidth: 100, width: 20 })
+
+        equal(result.style.transform, 'translateX(40px)')
+      })
+    })
+
+    describe('two arguments are passed', () => {
+      it('sets the transform to a translate in X and Y', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentSize, size }) => [
+          (parentSize - size) / 2,
+          (parentSize - size) / 2,
+        ])
+
+        const result = Enhanced.Component({ parentSize: 100, size: 20 })
+
+        equal(result.style.transform, 'translate(40px, 40px)')
+      })
+
+      describe('the first argument is empty', () => {
+        it('sets the transform to translate only Y', () => {
+          const Enhanced = ReactDream(identity).translate(({ parentHeight, height }) => [
+            null,
+            (parentHeight - height) / 2,
+          ])
+
+          const result = Enhanced.Component({ parentHeight: 100, height: 20 })
+
+          equal(result.style.transform, 'translateY(40px)')
+        })
+      })
+    })
+
+    describe('three arguments are passed', () => {
+      it('sets the transform to a translate in X, Y and Z', () => {
+        const Enhanced = ReactDream(identity).translate(({ parentSize, size }) => [
+          (parentSize - size) / 2,
+          (parentSize - size) / 2,
+          (parentSize - size) / 2,
+        ])
+
+        const result = Enhanced.Component({ parentSize: 100, size: 20 })
+
+        equal(result.style.transform, 'translate3D(40px, 40px, 40px)')
+      })
+
+      describe('the first and second arguments are empty', () => {
+        it('sets the transform to translate only Z', () => {
+          const Enhanced = ReactDream(identity).translate(({ parentHeight, height }) => [
+            null,
+            null,
+            (parentHeight - height) / 2,
+          ])
+
+          const result = Enhanced.Component({ parentHeight: 100, height: 20 })
+
+          equal(result.style.transform, 'translateZ(40px)')
+        })
+      })
     })
   })
 

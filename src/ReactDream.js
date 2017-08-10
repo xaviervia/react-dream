@@ -3,8 +3,12 @@ import setDisplayName from 'recompose/setDisplayName'
 import doAp from './internals/doAp'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
+import doPromap from './internals/doPromap'
 import doDebug from './internals/doDebug'
 import doLog from './internals/doLog'
+import doRotate from './internals/doRotate'
+import doTranslate from './internals/doTranslate'
+import doScale from './internals/doScale'
 import styleFromProps from './styleFromProps'
 
 // ALGEBRAS
@@ -23,6 +27,10 @@ const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderCom
 // contramap : Component -> (a -> Props) -> ReactDream
 const contramap = Component => propsPreprocessor =>
   ReactDream(doContramap(propsPreprocessor)(Component))
+
+// promap : Component -> (a -> Props) -> (Component -> Component) -> ReactDream
+const promap = Component => (propsPreprocessor, higherOrderComponent) =>
+  ReactDream(doPromap(propsPreprocessor, higherOrderComponent)(Component))
 
 // CUSTOM HELPERS
 // ////////////////////////////////////////////////////////////////////////// //
@@ -57,6 +65,17 @@ const removeProps = Component => (...propsToRemove) =>
     return propsCopy
   })
 
+// translate : Component -> (Props -> [Number]) -> ReactDream
+const translate = Component => getTranslateFromProps =>
+  ReactDream(doTranslate(getTranslateFromProps)(Component))
+
+// rotate : Component -> (Props -> Number) -> ReactDream
+const rotate = Component => getRotateFromProps =>
+  ReactDream(doRotate(getRotateFromProps)(Component))
+
+// scale : Component -> (Props -> Number) -> ReactDream
+const scale = Component => getScaleFromProps => ReactDream(doScale(getScaleFromProps)(Component))
+
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
   contramap(Component)(styleFromProps(getStyleFromProps))
@@ -73,6 +92,7 @@ const ReactDream = Component => ({
   chain: chain(Component),
   contramap: contramap(Component),
   map: map(Component),
+  promap: promap(Component),
 
   // Custom helpers
   addProps: addProps(Component),
@@ -82,6 +102,9 @@ const ReactDream = Component => ({
   style: style(Component),
   log: log(Component),
   debug: debug(Component),
+  rotate: rotate(Component),
+  scale: scale(Component),
+  translate: translate(Component),
 })
 
 ReactDream.of = ReactDream
