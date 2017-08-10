@@ -16,7 +16,7 @@ npm install --save react-dream
 You will also need a couple of peer dependencies:
 
 ```
-npm install --save react@16.0.0-beta.3 react-dom@16.0.0-beta.3 recompose ramda
+npm install --save react react-dom recompose ramda
 ```
 
 ## Usage
