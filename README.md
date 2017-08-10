@@ -139,8 +139,7 @@ Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for an explana
 
 ReactDream implements:
 
-- Functor (map)
-- Contravariant (contramap)
+- Profunctor (map, contramap, promap)
 - Applicative (of, ap)
 - Monad (chain)
 
@@ -191,6 +190,18 @@ render(
 ```
 
 This is a common pattern for higher-order Components, and the key advantage of using `contramap` instead of `map` for this purpose is that if the wrapped component is a stateless, function component, you avoid an unnecessary call to React. Another advantage is that functions passed to `contramap` as an argument are simply pure functions, without mentioning React at all, with the signature `Props -> Props`.
+
+#### promap
+
+`promap` can be thought of as a shorthand for doing `contramap` and `map` at the same time. The first argument to it is the function that is going to be used to `contramap` and the second is the one to be used to `map`:
+
+```js
+const Header = Html.Div
+  .promap(
+    ({title}) => ({children: title}),
+    setDisplayName('Header')
+  )
+```
 
 #### ap + of
 

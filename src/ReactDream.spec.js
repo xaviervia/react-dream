@@ -167,6 +167,28 @@ describe('ReactDream', () => {
     })
   })
 
+  describe('promap', () => {
+    it('passes the Component through the higher-order Component and the props preprocessor', () => {
+      const propsPreprocessor = () => ({ name: 'Radiohead' })
+      const higherOrderComponent = Target => ({ name }) =>
+        <div>
+          <Target>
+            {name}
+          </Target>
+        </div>
+
+      const Enhanced = ReactDream(props => <h1 {...props} />).promap(
+        propsPreprocessor,
+        higherOrderComponent
+      )
+
+      const renderer = create(<Enhanced.Component />)
+
+      equal(renderer.toJSON().type, 'div')
+      equal(renderer.toJSON().children[0].props.name, 'Radiohead')
+    })
+  })
+
   describe('fork', () => {
     it('exposes the inner Component to the passed in function', () => {
       const Component = props => <hr />

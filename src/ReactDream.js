@@ -3,6 +3,7 @@ import setDisplayName from 'recompose/setDisplayName'
 import doAp from './internals/doAp'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
+import doPromap from './internals/doPromap'
 import doDebug from './internals/doDebug'
 import doLog from './internals/doLog'
 import doRotate from './internals/doRotate'
@@ -25,6 +26,10 @@ const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderCom
 // contramap : Component -> (a -> Props) -> ReactDream
 const contramap = Component => propsPreprocessor =>
   ReactDream(doContramap(propsPreprocessor)(Component))
+
+// promap : Component -> (a -> Props) -> (Component -> Component) -> ReactDream
+const promap = Component => (propsPreprocessor, higherOrderComponent) =>
+  ReactDream(doPromap(propsPreprocessor, higherOrderComponent)(Component))
 
 // CUSTOM HELPERS
 // ////////////////////////////////////////////////////////////////////////// //
@@ -83,6 +88,7 @@ const ReactDream = Component => ({
   chain: chain(Component),
   contramap: contramap(Component),
   map: map(Component),
+  promap: promap(Component),
 
   // Custom helpers
   addProps: addProps(Component),
