@@ -10,13 +10,13 @@
 ## Installation
 
 ```
-npm install --save react-dream
+npm add react-dream
 ```
 
 You will also need a couple of peer dependencies:
 
 ```
-npm install --save react react-dom recompose ramda
+npm add react react-dom recompose ramda
 ```
 
 ## Usage
