@@ -386,6 +386,22 @@ render(
 
 > Just a reminder: rotations start from the top left edge as the axis, which is rarely what one wants. If you want the rotation to happen from the center, you can set `transform-origin: 'center'`, that with ReactDream would be `.style(props => ({transformOrigin: 'center'}))`.
 
+#### scale(getRotateFromProps)
+
+`scale` sets up a style `transform` property with the specified scaling factor. If there is a transform already, `scale` will append to it:
+
+```js
+const Title = Html.H1
+  .scale(props => 1.5)
+
+render(
+  <Title.Component style={{ transform: 'translateX(20px)' }} />,
+  document.getElementById('root')
+)
+```
+
+…will result in `transform: 'translateX(20px) scale(1.5)'`
+
 #### translate(getTranslateFromProps)
 
 `translate` allows you to easily set up the `transform` style property with the specified displacement. If there is a transform already, `translate` will append to it:

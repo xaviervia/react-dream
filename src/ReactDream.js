@@ -8,6 +8,7 @@ import doDebug from './internals/doDebug'
 import doLog from './internals/doLog'
 import doRotate from './internals/doRotate'
 import doTranslate from './internals/doTranslate'
+import doScale from './internals/doScale'
 import styleFromProps from './styleFromProps'
 
 // ALGEBRAS
@@ -72,6 +73,9 @@ const translate = Component => getTranslateFromProps =>
 const rotate = Component => getRotateFromProps =>
   ReactDream(doRotate(getRotateFromProps)(Component))
 
+// scale : Component -> (Props -> Number) -> ReactDream
+const scale = Component => getScaleFromProps => ReactDream(doScale(getScaleFromProps)(Component))
+
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
   contramap(Component)(styleFromProps(getStyleFromProps))
@@ -99,6 +103,7 @@ const ReactDream = Component => ({
   log: log(Component),
   debug: debug(Component),
   rotate: rotate(Component),
+  scale: scale(Component),
   translate: translate(Component),
 })
 

@@ -291,6 +291,33 @@ describe('ReactDream', () => {
     })
   })
 
+  describe('scale', () => {
+    it('adds a scaling factor', () => {
+      const Enhanced = ReactDream(identity).scale(({ big }) => (big ? 2 : 1))
+
+      const result = Enhanced.Component({
+        big: true,
+      })
+
+      equal(result.style.transform, 'scale(2)')
+    })
+
+    describe('is there is a transform already', () => {
+      it('concatenates this other transform', () => {
+        const Enhanced = ReactDream(identity).scale(({ big }) => (big ? 2 : 1))
+
+        const result = Enhanced.Component({
+          big: true,
+          style: {
+            transform: 'translate(20px, 20px)',
+          },
+        })
+
+        equal(result.style.transform, 'translate(20px, 20px) scale(2)')
+      })
+    })
+  })
+
   describe('translate', () => {
     describe('is there is a transform already', () => {
       it('concatenates this other transform', () => {
