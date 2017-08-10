@@ -382,7 +382,7 @@ render(
 )
 ```
 
-…will result in `transform: 'translateX(20px) rotate(45px)'`
+…will result in `transform: 'translateX(20px) rotate(45deg)'`
 
 > Just a reminder: rotations start from the top left edge as the axis, which is rarely what one wants. If you want the rotation to happen from the center, you can set `transform-origin: 'center'`, that with ReactDream would be `.style(props => ({transformOrigin: 'center'}))`.
 
