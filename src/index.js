@@ -1,5 +1,5 @@
-import * as _Html from './primitives/Html'
-import * as _Svg from './primitives/Svg'
+import * as _Html from './primitives/html'
+import * as _Svg from './primitives/svg'
 
 import _ReactDream from './ReactDream'
 
