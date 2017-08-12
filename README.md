@@ -377,7 +377,7 @@ const Title = Html.H1
   .rotate(props => 45)
 
 render(
-  <Title.Component style={{ transform: 'translateX(20px)' }} />,
+  <Title.Component style={{ transform: 'rotate(45deg)' }} />,
   document.getElementById('root')
 )
 ```
@@ -395,7 +395,7 @@ const Title = Html.H1
   .scale(props => 1.5)
 
 render(
-  <Title.Component style={{ transform: 'translateX(20px)' }} />,
+  <Title.Component style={{ transform: 'scale(1.5)' }} />,
   document.getElementById('root')
 )
 ```
