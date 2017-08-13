@@ -102,6 +102,67 @@ render(
 )
 ```
 
+### Pointfree style
+
+All methods of `ReactDream` are available as functions that can be partially applied and then take the ReactDream object as the last argument. This makes it possible to write compositions that can then be applied to a ReactDream object. The elements of the example above could be rewritten as:
+
+```js
+import React from 'react'
+import { render } from 'react-dom'
+import { withHandlers, withState } from 'recompose'
+import { compose, omit } from 'ramda'
+import { Html, ap, contramap, map, name, of, style } from 'react-dream'
+
+const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
+  <Wrapper {...{ ...props, ...wrapper }}>
+    <North {...{ ...props, ...north }} />
+    <South {...{ ...props, ...south }} />
+  </Wrapper>
+
+const Title = compose(
+  name('Title'),
+  style(() => ({
+    fontFamily: 'sans-serif',
+    fontSize: 18,
+  }))
+)(Html.H1)
+
+const Tagline = compose(
+  name('Tagline'),
+  style(() => ({
+    fontFamily: 'sans-serif',
+    fontSize: 13,
+  }))
+)(Html.P)
+
+const HeaderWrapper = compose(
+  map(withState('clicked', 'updateClicked', false)),
+  map(
+    withHandlers({
+      onClick: ({ clicked, updateClicked }) => () => updateClicked(!clicked),
+    })
+  ),
+  name('HeaderWrapper'),
+  style(({ clicked }) => ({
+    backgroundColor: clicked ? 'red' : 'green',
+    cursor: 'pointer',
+    padding: 15,
+  })),
+  contramap(omit(['clicked', 'updateClicked']))
+)(Html.Header)
+
+const Header = compose(
+  name('Header'),
+  contramap(({ title, tagline }) => ({
+    north: { children: title },
+    south: { children: tagline },
+  })),
+  ap(HeaderWrapper),
+  ap(Tagline),
+  ap(Title)
+)(of(withChildren))
+```
+
 ### Lifting your own component into ReactDream
 
 For example, for a ReactNative View:
