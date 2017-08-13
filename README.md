@@ -1,9 +1,11 @@
+![react-dream-logo](banner.png)
+
 # React Dream
 
 [![Build Status](https://travis-ci.org/xaviervia/react-dream.svg)](https://travis-ci.org/xaviervia/react-dream)
 [![npm version](https://img.shields.io/npm/v/react-dream.svg?maxAge=1000)](https://www.npmjs.com/package/react-dream)
 
-[Fantasy Land](https://github.com/fantasyland/fantasy-land) type for React Components
+[Fantasy Land](https://github.com/fantasyland/fantasy-land) type for [React Components](https://facebook.github.io/react/)
 
 **Caution: Extremely Experimental**
 
