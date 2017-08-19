@@ -35,9 +35,9 @@ import { omit } from 'ramda'
 import { Html, of } from 'react-dream'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
-  <Wrapper {...{ ...props, ...wrapper }}>
-    <North {...{ ...props, ...north }} />
-    <South {...{ ...props, ...south }} />
+  <Wrapper { ...props } { ...wrapper }}>
+    <North { ...props } { ...north }} />
+    <South { ...props } { ...south }} />
   </Wrapper>
 
 const Title = Html.H1
@@ -114,9 +114,9 @@ import { compose, omit } from 'ramda'
 import { Html, ap, contramap, map, name, of, style } from 'react-dream'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
-  <Wrapper {...{ ...props, ...wrapper }}>
-    <North {...{ ...props, ...north }} />
-    <South {...{ ...props, ...south }} />
+  <Wrapper { ...props } { ...wrapper }}>
+    <North { ...props } { ...north }} />
+    <South { ...props } { ...south }} />
   </Wrapper>
 
 const Title = compose(
@@ -172,26 +172,6 @@ import { ReactDream } from 'react-dream'
 import { View } from 'react-native'
 
 const DreamView = ReactDream(View)
-```
-
-### Using `chain`
-
-```js
-import { Svg, ReactDream } from 'react-dream'
-
-const wrapWithGLayer = Component => ReactDream(props =>
-  <g>
-    <Component {...props} />
-  </g>
-)
-
-const LayerWithCircle = Svg.Circle
-  .contramap(() => ({
-    r: 5,
-    x: 10,
-    y: 10
-  })
-  .chain(wrapWithGLayer)
 ```
 
 ## API
@@ -298,9 +278,9 @@ render(
 
 ```js
 const withChildren = North => South => Wrapper => ({north, south, wrapper, ...props}) =>
-  <Wrapper {...{...props, ...wrapper}}>
-    <North {...{...props, ...north}} />
-    <South {...{...props, ...south}} />
+  <Wrapper { ...props } { ...wrapper }}>
+    <North { ...props } { ...north }} />
+    <South { ...props } { ...south }} />
   </Wrapper>
 
 const PageHeader = of(withChildren)
@@ -322,23 +302,30 @@ render(
 ```
 
 #### chain
+
 `chain` is useful as a escape hatch if you want to escape from ReactDream and do something very React-y
 
 ```js
-const Header = Html.H1
-  .chain(H1Component => ReactDream(({title, subtitle}) =>
-    <header>
-      <H1Component>
-        {title}
-      </H1Component>
-      <h2>{subtitle}</h2>
-    </header>
-  ))
+import { Svg, ReactDream } from 'react-dream'
+
+const wrapWithGLayer = Component => ReactDream(props =>
+  <g>
+    <Component {...props} />
+  </g>
+)
+
+const LayerWithCircle = Svg.Circle
+  .contramap(() => ({
+    r: 5,
+    x: 10,
+    y: 10
+  })
+  .chain(wrapWithGLayer)
 ```
 
 Aside from Fantasy Land algebras, ReactDream provides the methods:
 
-#### addProps(getNewProps)
+#### addProps(props => propsToAdd : Object)
 
 `addProps` allows you to pass a function whose result will be merged with the regular props. This is useful to add derived props to a component:
 
@@ -382,7 +369,7 @@ render(
 
 `addProps` is a particular case of `contramap`, and it is implemented internally with `contramap`.
 
-#### removeProps(...propNamesToRemove)
+#### removeProps(...propNamesToRemove : [String])
 
 `removeProps` filters out props. Very useful to avoid the React warnings of unrecognized props.
 
@@ -394,9 +381,9 @@ const ButtonWithStates = Html.Button
   }))
 ```
 
-#### style(getStyleFromProps)
+#### style(props => stylesToAdd : Object)
 
-Takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
+The `style` helper gives a simple way of adding properties to the `style` prop of the target component. It takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
 
 ```js
 const Title = Html.H1
@@ -413,7 +400,7 @@ render(
 
 The resulting style will be: `{ color: 'red', backgroundColor: 'green' }`.
 
-#### name(newDisplayName)
+#### name(newDisplayName : String)
 
 Sets the `displayName` of the component:
 
@@ -421,7 +408,7 @@ Sets the `displayName` of the component:
 const Tagline = H2.name('tagline')
 ```
 
-#### fork(doSomethingWithTheComponent)
+#### fork(Component => {})
 
 Calls the argument function with the actual component in the inside:
 
@@ -431,7 +418,7 @@ H1.fork(Component => render(<Component>Hello</Component>, domElement))
 
 …will render `<h1>Hello</h1>`
 
-#### rotate(getRotateFromProps)
+#### rotate(props => rotation : number)
 
 `rotate` sets up a style `transform` property with the specified rotation, in degrees. If there is a transform already, `rotate` will append to it:
 
@@ -449,7 +436,7 @@ render(
 
 > Just a reminder: rotations start from the top left edge as the axis, which is rarely what one wants. If you want the rotation to happen from the center, you can set `transform-origin: 'center'`, that with ReactDream would be `.style(props => ({transformOrigin: 'center'}))`.
 
-#### scale(getRotateFromProps)
+#### scale(props => scaleFactor : number)
 
 `scale` sets up a style `transform` property with the specified scaling factor. If there is a transform already, `scale` will append to it:
 
@@ -465,7 +452,7 @@ render(
 
 …will result in `transform: 'translateX(20px) scale(1.5)'`
 
-#### translate(getTranslateFromProps)
+#### translate(props => [x : number, y : number, z : number])
 
 `translate` allows you to easily set up the `transform` style property with the specified displacement. If there is a transform already, `translate` will append to it:
 
@@ -482,25 +469,25 @@ const Title = Html.H1
 
 The downside of chaining method calls is that debugging is not super intuitive. Since there are no statements, it’s not possible to place a `console.log()` or `debugger` call in the middle of the chain without some overhead. To simplify that, two methods for debugging are bundled:
 
-#### log(text)
+#### log(props => value : any)
 
 Whenever the Component is called with new props, it will print:
 
-- The custom text
 - The component displayName
-- The current props
+- The value by the argument function. The value can be anything, it will be passed as-is to the `console.log` function.
 
 Pretty useful to debug what exactly is happening in the chain:
 
 ```js
 const Title = Html.H1
-  .log('what gets to the H1?')
+  .log(props => 'what props gets to the H1?')
+  .log(props => props)
   .contramap(({hovered, label}) => ({
     children: hovered ? 'Hovered!' : label
   }))
-  .log('is there a label before the contramap?')
+  .log(({label}) => 'is there a label before the contramap? ' + label)
   .name('Title')
-  .log('does it also get a label from outside?')
+  .log(({label}) => 'does it also get a label from outside? ' + label)
 
 render(
   <Title.Component hovered label='Label from outside' />,
@@ -508,19 +495,33 @@ render(
 )
 ```
 
-Each time the `Title.Component` is re rendered, this will print, in this order:
+`log` will become a no-op when the `NODE_ENV` is `production`.
 
-1. `'does it also get a label from outside?', 'Title', { label: 'Label from outside', hovered: true }`
-2. `'is there a label before the contramap?', 'H1', { label: 'Label from outside', hovered: true }`
-3. `'what gets to the H1?', 'H1', { label: 'Hovered!' }`
+For more details check out [@hocs/with-log](https://github.com/deepsweet/hocs/tree/master/packages/with-log) documentation which React Dream is using under the hood.
 
 #### debug()
 
-**Be careful. Dangerous**
+**Careful**: This method allows you to inject a `debugger` statement at that point in the chain. The result will allow you to inspect the Component and its props, from the JavaScript scope of the [@hocs/with-debugger higher-order component](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger).
 
-This last-resort method allows you to inject a `debugger` statement at that point in the change. The result will allow you to inspect the Component and its props in the higher order component.
+```js
+import React from 'react'
+import { render } from 'react-dom'
+import { Html } from 'react-dream'
+
+const App = Html.Div
+  .debug()
+  .removeProps('a', 'c', 'randomProp')
+  .addProps(() => ({
+    a: '1',
+    c: '4'
+  }))
+```
 
 It will be called on each render of the component.
+
+`debug` will become a no-op when the `NODE_ENV` is `production`.
+
+For more details check out [@hocs/with-debugger](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger) documentation which React Dream is using under the hood.
 
 ### Built-in Primitives
 

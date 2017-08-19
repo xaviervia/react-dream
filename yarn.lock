@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@hocs/with-debugger@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hocs/with-debugger/-/with-debugger-0.1.0.tgz#2a8c7f3dd9ae953fb3b0a736289a148b72b0b85c"
+
+"@hocs/with-log@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hocs/with-log/-/with-log-0.1.0.tgz#52d171cdcad863462ee6545c84f4fd97741abc50"
+
 "@klarna/higher-order-components@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@klarna/higher-order-components/-/higher-order-components-3.0.1.tgz#d1f71733af58587fadbf065ba233237b720baf83"

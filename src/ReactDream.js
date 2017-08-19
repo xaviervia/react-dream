@@ -4,8 +4,8 @@ import doAp from './internals/doAp'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
 import doPromap from './internals/doPromap'
-import doDebug from './internals/doDebug'
-import doLog from './internals/doLog'
+import withDebugger from '@hocs/with-debugger'
+import withLog from '@hocs/with-log'
 import doRotate from './internals/doRotate'
 import doTranslate from './internals/doTranslate'
 import doScale from './internals/doScale'
@@ -46,10 +46,10 @@ const addProps = Component => getPropsToAdd =>
 const fork = Component => extractComponent => extractComponent(Component)
 
 // debug : Component -> () -> IO ReactDream
-const debug = Component => () => ReactDream(doDebug(Component))
+const debug = Component => () => ReactDream(withDebugger(Component))
 
-// log : Component -> String -> IO ReactDream
-const log = Component => text => ReactDream(doLog(text)(Component))
+// log : Component -> (Props -> String) -> IO ReactDream
+const log = Component => messageFromProps => ReactDream(withLog(messageFromProps)(Component))
 
 // name : Component -> String -> ReactDream
 const name = Component => compose(map(Component), setDisplayName)
