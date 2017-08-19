@@ -465,7 +465,7 @@ render(
 
 …will result in `transform: 'translateX(20px) scale(1.5)'`
 
-#### translate(getTranslateFromProps)
+#### translate(props => [x : number, y : number, z : number])
 
 `translate` allows you to easily set up the `transform` style property with the specified displacement. If there is a transform already, `translate` will append to it:
 
@@ -482,25 +482,25 @@ const Title = Html.H1
 
 The downside of chaining method calls is that debugging is not super intuitive. Since there are no statements, it’s not possible to place a `console.log()` or `debugger` call in the middle of the chain without some overhead. To simplify that, two methods for debugging are bundled:
 
-#### log(text)
+#### log(props => value : any)
 
 Whenever the Component is called with new props, it will print:
 
-- The custom text
 - The component displayName
-- The current props
+- The value by the argument function. The value can be anything, it will be passed as-is to the `console.log` function.
 
 Pretty useful to debug what exactly is happening in the chain:
 
 ```js
 const Title = Html.H1
-  .log('what gets to the H1?')
+  .log(props => 'what props gets to the H1?')
+  .log(props => props)
   .contramap(({hovered, label}) => ({
     children: hovered ? 'Hovered!' : label
   }))
-  .log('is there a label before the contramap?')
+  .log(({label}) => 'is there a label before the contramap? ' + label)
   .name('Title')
-  .log('does it also get a label from outside?')
+  .log(({label}) => 'does it also get a label from outside? ' + label)
 
 render(
   <Title.Component hovered label='Label from outside' />,
@@ -508,11 +508,7 @@ render(
 )
 ```
 
-Each time the `Title.Component` is re rendered, this will print, in this order:
-
-1. `'does it also get a label from outside?', 'Title', { label: 'Label from outside', hovered: true }`
-2. `'is there a label before the contramap?', 'H1', { label: 'Label from outside', hovered: true }`
-3. `'what gets to the H1?', 'H1', { label: 'Hovered!' }`
+For more details check out [@hocs/with-log](https://github.com/deepsweet/hocs/tree/master/packages/with-log) documentation which React Dream is using under the hood.
 
 #### debug()
 
