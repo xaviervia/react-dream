@@ -253,6 +253,7 @@ const Header = Html.Div
 Applying second-order components (`Component -> Component`) can also be done with `map`: where `ap` shines is in allowing you to apply a higher-order component that takes two or more components (third or higher order, such as `Component -> Component -> Component -> Component`), that is otherwise not possible with `map`. This makes it possible to abstract control flow or composition patterns in higher-order components:
 
 **Control flow example**
+
 ```js
 const eitherLeftOrRight = Left => Right => ({left, ...props}) =>
   left
@@ -325,6 +326,14 @@ const LayerWithCircle = Svg.Circle
 
 Aside from Fantasy Land algebras, ReactDream provides the methods:
 
+#### fork(Component => {})
+
+Calls the argument function with the actual component in the inside. This function is intended to be used to get the component for rendering, which is a side effect:
+
+```js
+H1.fork(Component => render(<Component>Hello</Component>, domElement))
+```
+
 #### addProps(props => propsToAdd : Object)
 
 `addProps` allows you to pass a function whose result will be merged with the regular props. This is useful to add derived props to a component:
@@ -367,7 +376,22 @@ render(
 )
 ```
 
-`addProps` is a particular case of `contramap`, and it is implemented internally with `contramap`.
+##### `addProps` is a use case of `contramap`
+
+```js
+.addProps(({width, height}) => ({
+  viewBox: `0 0 ${props.width} ${props.height}`
+}))
+```
+
+…is equivalent to:
+
+```js
+.contramap(props => ({
+  ...props,
+  viewBox: `0 0 ${props.width} ${props.height}`
+}))
+```
 
 #### removeProps(...propNamesToRemove : [String])
 
@@ -379,6 +403,18 @@ const ButtonWithStates = Html.Button
   .style(({hovered, pressed}) => ({
     color: pressed ? 'red' : (hovered ? 'orange' : 'black')
   }))
+```
+
+##### `removeProps` is an use case of `contramap`
+
+```js
+.removeProps('title', 'hovered')
+```
+
+…is equivalent to:
+
+```js
+.contramap(({title, hovered, ...otherProps}) => otherProps)
 ```
 
 #### style(props => stylesToAdd : Object)
@@ -400,23 +436,47 @@ render(
 
 The resulting style will be: `{ color: 'red', backgroundColor: 'green' }`.
 
+##### `style` is an use case of `contramap`
+
+```js
+.style(({hovered}) => ({
+  color: hovered ? 'red' : 'black'
+}))
+```
+
+…is equivalent to:
+
+```js
+.contramap(props => ({
+  style: {
+    color: props.hovered ? 'red' : 'black',
+    ...props.style
+  },
+  ...props
+}))
+```
+
 #### name(newDisplayName : String)
 
 Sets the `displayName` of the component:
 
 ```js
-const Tagline = H2.name('tagline')
+const Tagline = H2.name('Tagline')
 ```
 
-#### fork(Component => {})
-
-Calls the argument function with the actual component in the inside:
+##### `name` is an use case of `map`
 
 ```js
-H1.fork(Component => render(<Component>Hello</Component>, domElement))
+.name('Tagline')
 ```
 
-…will render `<h1>Hello</h1>`
+…is equivalent to:
+
+```js
+import { setDisplayName } from 'recompose'
+
+.map(setDisplayName('Title'))
+```
 
 #### rotate(props => rotation : number)
 
@@ -436,6 +496,26 @@ render(
 
 > Just a reminder: rotations start from the top left edge as the axis, which is rarely what one wants. If you want the rotation to happen from the center, you can set `transform-origin: 'center'`, that with ReactDream would be `.style(props => ({transformOrigin: 'center'}))`.
 
+##### `rotate` is an use case of `contramap`
+
+```js
+.rotate(props => 45)
+```
+
+…is equivalent to:
+
+```js
+.contramap(props => ({
+  style: {
+    transform: props.transform
+      ? `${props.transform} rotate(45deg)`
+      : 'rotate(45deg)'
+    ...props.style
+  },
+  ...props
+}))
+```
+
 #### scale(props => scaleFactor : number)
 
 `scale` sets up a style `transform` property with the specified scaling factor. If there is a transform already, `scale` will append to it:
@@ -452,6 +532,26 @@ render(
 
 …will result in `transform: 'translateX(20px) scale(1.5)'`
 
+##### `scale` is an use case of `contramap`
+
+```js
+.scale(props => 2)
+```
+
+…is equivalent to:
+
+```js
+.contramap(props => ({
+  style: {
+    transform: props.transform
+      ? `${props.transform} scale(2)`
+      : 'scale(2)'
+    ...props.style
+  },
+  ...props
+}))
+```
+
 #### translate(props => [x : number, y : number, z : number])
 
 `translate` allows you to easily set up the `transform` style property with the specified displacement. If there is a transform already, `translate` will append to it:
@@ -464,6 +564,26 @@ const Title = Html.H1
 ```
 
 …will result in `transform: 'translateZ(30px) translateY(30px) translateX(30px)'`
+
+##### `translate` is an use case of `contramap`
+
+```js
+.translate(({x, y}) => [x, y])
+```
+
+…is equivalent to:
+
+```js
+.contramap(props => ({
+  style: {
+    transform: props.transform
+      ? `${props.transform} translate(${x}px, ${y}px)`
+      :  `translate(${x}px, ${y}px)`
+    ...props.style
+  },
+  ...props
+}))
+```
 
 ### Debugging
 
@@ -499,6 +619,20 @@ render(
 
 For more details check out [@hocs/with-log](https://github.com/deepsweet/hocs/tree/master/packages/with-log) documentation which React Dream is using under the hood.
 
+##### `log` is an use case of `map`
+
+```js
+.log(({a}) => `a is: ${a}`)
+```
+
+…is equivalent to:
+
+```js
+import withLog from '@hocs/with-log'
+
+.map(withLog(({a}) => `a is: ${a}`))
+```
+
 #### debug()
 
 **Careful**: This method allows you to inject a `debugger` statement at that point in the chain. The result will allow you to inspect the Component and its props, from the JavaScript scope of the [@hocs/with-debugger higher-order component](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger).
@@ -522,6 +656,20 @@ It will be called on each render of the component.
 `debug` will become a no-op when the `NODE_ENV` is `production`.
 
 For more details check out [@hocs/with-debugger](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger) documentation which React Dream is using under the hood.
+
+##### `debug` is an use case of `map`
+
+```js
+.debug()
+```
+
+…is equivalent to:
+
+```js
+import withDebugger from '@hocs/with-debugger'
+
+.map(withDebugger)
+```
 
 ### Built-in Primitives
 
