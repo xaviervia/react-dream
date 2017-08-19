@@ -21,6 +21,27 @@ You will also need a couple of peer dependencies:
 npm add react react-dom recompose ramda
 ```
 
+## Table of contents
+
+- [Usage](usage)
+- [API](api)
+  - [map](mapcomponent--enhancedcomponent)
+  - [contramap](contramapprops--modifiedprops)
+  - [promap](promapprops--modifiedprops-component--enhancedcomponent)
+  - [ap + of](ap--of)
+  - [chain](chain)
+  - [fork](forkcomponent--)
+  - [addProps](addpropsprops--propstoadd--object)
+  - [removeProps](removepropspropnamestoremove--string)
+  - [style](styleprops--stylestoadd--object)
+  - [name](namenewdisplayname--string)
+  - [rotate](rotateprops--rotation--number)
+  - [scale](scaleprops--scalefactor--number)
+  - [translate](translateprops--x--number-y--number-z--number)
+  - [log](logprops--value--any)
+  - [debug](debug)
+- [Built-in primitives](built-in-primitives)
+
 ## Usage
 
 Here is an extensive example that can be found in [examples](src/examples/index.js):
