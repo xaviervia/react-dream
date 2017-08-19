@@ -19,12 +19,10 @@ const ap = higherOrderComponent => ReactDreamComponent =>
   ReactDream(doAp(higherOrderComponent)(ReactDreamComponent))
 
 // chain : Component -> (Component -> ReactDream) -> ReactDream
-const chain = Component => kleisliReactDreamComponent =>
-  kleisliReactDreamComponent(Component)
+const chain = Component => kleisliReactDreamComponent => kleisliReactDreamComponent(Component)
 
 // map : Component -> (Component -> Component) -> ReactDream
-const map = Component => higherOrderComponent =>
-  ReactDream(doMap(higherOrderComponent)(Component))
+const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderComponent)(Component))
 
 // contramap : Component -> (a -> Props) -> ReactDream
 const contramap = Component => propsPreprocessor =>
@@ -51,8 +49,7 @@ const fork = Component => extractComponent => extractComponent(Component)
 const debug = Component => () => ReactDream(withDebugger(Component))
 
 // log : Component -> (Props -> String) -> IO ReactDream
-const log = Component => messageFromProps =>
-  ReactDream(withLog(messageFromProps)(Component))
+const log = Component => messageFromProps => ReactDream(withLog(messageFromProps)(Component))
 
 // name : Component -> String -> ReactDream
 const name = Component => compose(map(Component), setDisplayName)
@@ -77,8 +74,7 @@ const rotate = Component => getRotateFromProps =>
   ReactDream(doRotate(getRotateFromProps)(Component))
 
 // scale : Component -> (Props -> Number) -> ReactDream
-const scale = Component => getScaleFromProps =>
-  ReactDream(doScale(getScaleFromProps)(Component))
+const scale = Component => getScaleFromProps => ReactDream(doScale(getScaleFromProps)(Component))
 
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
