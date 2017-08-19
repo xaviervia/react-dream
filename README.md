@@ -495,15 +495,33 @@ render(
 )
 ```
 
+`log` will become a no-op when the `NODE_ENV` is `production`.
+
 For more details check out [@hocs/with-log](https://github.com/deepsweet/hocs/tree/master/packages/with-log) documentation which React Dream is using under the hood.
 
 #### debug()
 
-**Be careful. Dangerous**
+**Careful**: This method allows you to inject a `debugger` statement at that point in the chain. The result will allow you to inspect the Component and its props, from the JavaScript scope of the [@hocs/with-debugger higher-order component](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger).
 
-This last-resort method allows you to inject a `debugger` statement at that point in the change. The result will allow you to inspect the Component and its props in the higher order component.
+```js
+import React from 'react'
+import { render } from 'react-dom'
+import { Html } from 'react-dream'
+
+const App = Html.Div
+  .debug()
+  .removeProps('a', 'c', 'randomProp')
+  .addProps(() => ({
+    a: '1',
+    c: '4'
+  }))
+```
 
 It will be called on each render of the component.
+
+`debug` will become a no-op when the `NODE_ENV` is `production`.
+
+For more details check out [@hocs/with-debugger](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger) documentation which React Dream is using under the hood.
 
 ### Built-in Primitives
 
