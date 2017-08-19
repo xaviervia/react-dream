@@ -176,19 +176,20 @@ const DreamView = ReactDream(View)
 
 ## API
 
-### The ReactDream type
+The following are the methods of objects of the ReactDream type. There are two types of methods:
 
-Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for an explanation of the various algebras.
+- Algebras: they come from Fantasy Land, and they are defined following that specification.
+- Helpers: they are derivations (use cases) of the methods that come from the algebras. Added for convenience.
 
-ReactDream implements:
+ReactDream implements these Fantasy Land algebras:
 
 - Profunctor (map, contramap, promap)
 - Applicative (of, ap)
 - Monad (chain)
 
-In particular:
+Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for more details.
 
-#### map
+### map(Component => EnhancedComponent)
 
 `map` allows to wrap the function with regular higher-order components, such as the ones provided by [recompose](https://github.com/acdlite/recompose).
 
@@ -213,7 +214,7 @@ const Counter = ReactDream(({counter, onClick}) =>
 
 This is because `map` expects a function from `a -> b` in the general case but from `Component -> a` in this particular case since holding components is the intended usage of ReactDream. Higher-order components are functions from `Component -> Component`, so they perfectly fit the bill.
 
-#### contramap
+### contramap(props => modifiedProps)
 
 `contramap` allows to preprocess props before they reach the component.
 
@@ -234,7 +235,7 @@ render(
 
 This is a common pattern for higher-order Components, and the key advantage of using `contramap` instead of `map` for this purpose is that if the wrapped component is a stateless, function component, you avoid an unnecessary call to React. Another advantage is that functions passed to `contramap` as an argument are simply pure functions, without mentioning React at all, with the signature `Props -> Props`.
 
-#### promap
+### promap(props => modifiedProps, Component => EnhancedComponent)
 
 `promap` can be thought of as a shorthand for doing `contramap` and `map` at the same time. The first argument to it is the function that is going to be used to `contramap` and the second is the one to be used to `map`:
 
@@ -246,7 +247,7 @@ const Header = Html.Div
   )
 ```
 
-#### ap + of
+### ap + of
 
 `ap` allows you to apply a higher-order components to regular components, and `of` allows you to lift any value to `ReactDream`, which is useful for lifting higher-order components.
 
@@ -302,7 +303,7 @@ render(
 )
 ```
 
-#### chain
+### chain
 
 `chain` is useful as a escape hatch if you want to escape from ReactDream and do something very React-y
 
@@ -326,7 +327,7 @@ const LayerWithCircle = Svg.Circle
 
 Aside from Fantasy Land algebras, ReactDream provides the methods:
 
-#### fork(Component => {})
+### fork(Component => {})
 
 Calls the argument function with the actual component in the inside. This function is intended to be used to get the component for rendering, which is a side effect:
 
@@ -334,7 +335,7 @@ Calls the argument function with the actual component in the inside. This functi
 H1.fork(Component => render(<Component>Hello</Component>, domElement))
 ```
 
-#### addProps(props => propsToAdd : Object)
+### addProps(props => propsToAdd : Object)
 
 `addProps` allows you to pass a function whose result will be merged with the regular props. This is useful to add derived props to a component:
 
@@ -376,7 +377,7 @@ render(
 )
 ```
 
-##### `addProps` is a use case of `contramap`
+#### `addProps` is a use case of `contramap`
 
 ```js
 .addProps(({width, height}) => ({
@@ -393,7 +394,7 @@ render(
 }))
 ```
 
-#### removeProps(...propNamesToRemove : [String])
+### removeProps(...propNamesToRemove : [String])
 
 `removeProps` filters out props. Very useful to avoid the React warnings of unrecognized props.
 
@@ -405,7 +406,7 @@ const ButtonWithStates = Html.Button
   }))
 ```
 
-##### `removeProps` is an use case of `contramap`
+#### `removeProps` is an use case of `contramap`
 
 ```js
 .removeProps('title', 'hovered')
@@ -417,7 +418,7 @@ const ButtonWithStates = Html.Button
 .contramap(({title, hovered, ...otherProps}) => otherProps)
 ```
 
-#### style(props => stylesToAdd : Object)
+### style(props => stylesToAdd : Object)
 
 The `style` helper gives a simple way of adding properties to the `style` prop of the target component. It takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
 
@@ -436,7 +437,7 @@ render(
 
 The resulting style will be: `{ color: 'red', backgroundColor: 'green' }`.
 
-##### `style` is an use case of `contramap`
+#### `style` is an use case of `contramap`
 
 ```js
 .style(({hovered}) => ({
@@ -456,7 +457,7 @@ The resulting style will be: `{ color: 'red', backgroundColor: 'green' }`.
 }))
 ```
 
-#### name(newDisplayName : String)
+### name(newDisplayName : String)
 
 Sets the `displayName` of the component:
 
@@ -464,7 +465,7 @@ Sets the `displayName` of the component:
 const Tagline = H2.name('Tagline')
 ```
 
-##### `name` is an use case of `map`
+#### `name` is an use case of `map`
 
 ```js
 .name('Tagline')
@@ -478,7 +479,7 @@ import { setDisplayName } from 'recompose'
 .map(setDisplayName('Title'))
 ```
 
-#### rotate(props => rotation : number)
+### rotate(props => rotation : number)
 
 `rotate` sets up a style `transform` property with the specified rotation, in degrees. If there is a transform already, `rotate` will append to it:
 
@@ -496,7 +497,7 @@ render(
 
 > Just a reminder: rotations start from the top left edge as the axis, which is rarely what one wants. If you want the rotation to happen from the center, you can set `transform-origin: 'center'`, that with ReactDream would be `.style(props => ({transformOrigin: 'center'}))`.
 
-##### `rotate` is an use case of `contramap`
+#### `rotate` is an use case of `contramap`
 
 ```js
 .rotate(props => 45)
@@ -516,7 +517,7 @@ render(
 }))
 ```
 
-#### scale(props => scaleFactor : number)
+### scale(props => scaleFactor : number)
 
 `scale` sets up a style `transform` property with the specified scaling factor. If there is a transform already, `scale` will append to it:
 
@@ -552,7 +553,7 @@ render(
 }))
 ```
 
-#### translate(props => [x : number, y : number, z : number])
+### translate(props => [x : number, y : number, z : number])
 
 `translate` allows you to easily set up the `transform` style property with the specified displacement. If there is a transform already, `translate` will append to it:
 
@@ -565,7 +566,7 @@ const Title = Html.H1
 
 …will result in `transform: 'translateZ(30px) translateY(30px) translateX(30px)'`
 
-##### `translate` is an use case of `contramap`
+#### `translate` is an use case of `contramap`
 
 ```js
 .translate(({x, y}) => [x, y])
@@ -585,11 +586,11 @@ const Title = Html.H1
 }))
 ```
 
-### Debugging
+## Debugging
 
 The downside of chaining method calls is that debugging is not super intuitive. Since there are no statements, it’s not possible to place a `console.log()` or `debugger` call in the middle of the chain without some overhead. To simplify that, two methods for debugging are bundled:
 
-#### log(props => value : any)
+### log(props => value : any)
 
 Whenever the Component is called with new props, it will print:
 
@@ -619,7 +620,7 @@ render(
 
 For more details check out [@hocs/with-log](https://github.com/deepsweet/hocs/tree/master/packages/with-log) documentation which React Dream is using under the hood.
 
-##### `log` is an use case of `map`
+#### `log` is an use case of `map`
 
 ```js
 .log(({a}) => `a is: ${a}`)
@@ -633,7 +634,7 @@ import withLog from '@hocs/with-log'
 .map(withLog(({a}) => `a is: ${a}`))
 ```
 
-#### debug()
+### debug()
 
 **Careful**: This method allows you to inject a `debugger` statement at that point in the chain. The result will allow you to inspect the Component and its props, from the JavaScript scope of the [@hocs/with-debugger higher-order component](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger).
 
@@ -657,7 +658,7 @@ It will be called on each render of the component.
 
 For more details check out [@hocs/with-debugger](https://github.com/deepsweet/hocs/tree/master/packages/with-debugger) documentation which React Dream is using under the hood.
 
-##### `debug` is an use case of `map`
+#### `debug` is an use case of `map`
 
 ```js
 .debug()
@@ -671,7 +672,7 @@ import withDebugger from '@hocs/with-debugger'
 .map(withDebugger)
 ```
 
-### Built-in Primitives
+## Built-in Primitives
 
 ReactDream ships with a complete set of HTML and SVG primitives lifted into the type. You can access them like:
 
