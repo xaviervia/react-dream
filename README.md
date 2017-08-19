@@ -35,9 +35,9 @@ import { omit } from 'ramda'
 import { Html, of } from 'react-dream'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
-  <Wrapper {...{ ...props, ...wrapper }}>
-    <North {...{ ...props, ...north }} />
-    <South {...{ ...props, ...south }} />
+  <Wrapper { ...props } { ...wrapper }}>
+    <North { ...props } { ...north }} />
+    <South { ...props } { ...south }} />
   </Wrapper>
 
 const Title = Html.H1
@@ -114,9 +114,9 @@ import { compose, omit } from 'ramda'
 import { Html, ap, contramap, map, name, of, style } from 'react-dream'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
-  <Wrapper {...{ ...props, ...wrapper }}>
-    <North {...{ ...props, ...north }} />
-    <South {...{ ...props, ...south }} />
+  <Wrapper { ...props } { ...wrapper }}>
+    <North { ...props } { ...north }} />
+    <South { ...props } { ...south }} />
   </Wrapper>
 
 const Title = compose(
@@ -172,26 +172,6 @@ import { ReactDream } from 'react-dream'
 import { View } from 'react-native'
 
 const DreamView = ReactDream(View)
-```
-
-### Using `chain`
-
-```js
-import { Svg, ReactDream } from 'react-dream'
-
-const wrapWithGLayer = Component => ReactDream(props =>
-  <g>
-    <Component {...props} />
-  </g>
-)
-
-const LayerWithCircle = Svg.Circle
-  .contramap(() => ({
-    r: 5,
-    x: 10,
-    y: 10
-  })
-  .chain(wrapWithGLayer)
 ```
 
 ## API
@@ -298,9 +278,9 @@ render(
 
 ```js
 const withChildren = North => South => Wrapper => ({north, south, wrapper, ...props}) =>
-  <Wrapper {...{...props, ...wrapper}}>
-    <North {...{...props, ...north}} />
-    <South {...{...props, ...south}} />
+  <Wrapper { ...props } { ...wrapper }}>
+    <North { ...props } { ...north }} />
+    <South { ...props } { ...south }} />
   </Wrapper>
 
 const PageHeader = of(withChildren)
@@ -322,23 +302,30 @@ render(
 ```
 
 #### chain
+
 `chain` is useful as a escape hatch if you want to escape from ReactDream and do something very React-y
 
 ```js
-const Header = Html.H1
-  .chain(H1Component => ReactDream(({title, subtitle}) =>
-    <header>
-      <H1Component>
-        {title}
-      </H1Component>
-      <h2>{subtitle}</h2>
-    </header>
-  ))
+import { Svg, ReactDream } from 'react-dream'
+
+const wrapWithGLayer = Component => ReactDream(props =>
+  <g>
+    <Component {...props} />
+  </g>
+)
+
+const LayerWithCircle = Svg.Circle
+  .contramap(() => ({
+    r: 5,
+    x: 10,
+    y: 10
+  })
+  .chain(wrapWithGLayer)
 ```
 
 Aside from Fantasy Land algebras, ReactDream provides the methods:
 
-#### addProps(getNewProps)
+#### addProps(props => propsToAdd : Object)
 
 `addProps` allows you to pass a function whose result will be merged with the regular props. This is useful to add derived props to a component:
 
@@ -382,7 +369,7 @@ render(
 
 `addProps` is a particular case of `contramap`, and it is implemented internally with `contramap`.
 
-#### removeProps(...propNamesToRemove)
+#### removeProps(...propNamesToRemove : [String])
 
 `removeProps` filters out props. Very useful to avoid the React warnings of unrecognized props.
 
@@ -394,9 +381,9 @@ const ButtonWithStates = Html.Button
   }))
 ```
 
-#### style(getStyleFromProps)
+#### style(props => stylesToAdd : Object)
 
-Takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
+The `style` helper gives a simple way of adding properties to the `style` prop of the target component. It takes a function from props to a style object. The function will be invoked each time with the props. The result will be set as the `style` prop of the wrapper component. If there are styles coming from outside, they will be merged together with the result of this function. For example:
 
 ```js
 const Title = Html.H1
@@ -413,7 +400,7 @@ render(
 
 The resulting style will be: `{ color: 'red', backgroundColor: 'green' }`.
 
-#### name(newDisplayName)
+#### name(newDisplayName : String)
 
 Sets the `displayName` of the component:
 
@@ -421,7 +408,7 @@ Sets the `displayName` of the component:
 const Tagline = H2.name('tagline')
 ```
 
-#### fork(doSomethingWithTheComponent)
+#### fork(Component => {})
 
 Calls the argument function with the actual component in the inside:
 
@@ -431,7 +418,7 @@ H1.fork(Component => render(<Component>Hello</Component>, domElement))
 
 …will render `<h1>Hello</h1>`
 
-#### rotate(getRotateFromProps)
+#### rotate(props => rotation : number)
 
 `rotate` sets up a style `transform` property with the specified rotation, in degrees. If there is a transform already, `rotate` will append to it:
 
@@ -449,7 +436,7 @@ render(
 
 > Just a reminder: rotations start from the top left edge as the axis, which is rarely what one wants. If you want the rotation to happen from the center, you can set `transform-origin: 'center'`, that with ReactDream would be `.style(props => ({transformOrigin: 'center'}))`.
 
-#### scale(getRotateFromProps)
+#### scale(props => scaleFactor : number)
 
 `scale` sets up a style `transform` property with the specified scaling factor. If there is a transform already, `scale` will append to it:
 
