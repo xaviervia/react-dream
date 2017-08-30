@@ -1,5 +1,6 @@
 import compose from 'recompose/compose'
 import setDisplayName from 'recompose/setDisplayName'
+import recomposeDefaultProps from 'recompose/defaultProps'
 import doAp from './internals/doAp'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
@@ -47,6 +48,9 @@ const fork = Component => extractComponent => extractComponent(Component)
 
 // debug : Component -> () -> IO ReactDream
 const debug = Component => () => ReactDream(withDebugger(Component))
+
+// defaultProps : Component -> (Props) -> ReactDream
+const defaultProps = Component => props => ReactDream(recomposeDefaultProps(props)(Component))
 
 // log : Component -> (Props -> String) -> IO ReactDream
 const log = Component => messageFromProps => ReactDream(withLog(messageFromProps)(Component))
@@ -96,14 +100,15 @@ const ReactDream = Component => ({
 
   // Custom helpers
   addProps: addProps(Component),
+  debug: debug(Component),
+  defaultProps: defaultProps(Component),
   fork: fork(Component),
   name: name(Component),
-  removeProps: removeProps(Component),
-  style: style(Component),
   log: log(Component),
-  debug: debug(Component),
+  removeProps: removeProps(Component),
   rotate: rotate(Component),
   scale: scale(Component),
+  style: style(Component),
   translate: translate(Component),
 })
 

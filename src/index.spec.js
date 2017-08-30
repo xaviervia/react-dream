@@ -7,6 +7,7 @@ import ap from './partialApplication/ap'
 import chain from './partialApplication/chain'
 import contramap from './partialApplication/contramap'
 import debug from './partialApplication/debug'
+import defaultProps from './partialApplication/defaultProps'
 import fork from './partialApplication/fork'
 import log from './partialApplication/log'
 import map from './partialApplication/map'
@@ -41,6 +42,10 @@ describe('entrypoint', () => {
 
   it('exposes debug', () => {
     equal(debug, entrypoint.debug)
+  })
+
+  it('exposes defaultProps', () => {
+    equal(defaultProps, entrypoint.defaultProps)
   })
 
   it('exposes fork', () => {

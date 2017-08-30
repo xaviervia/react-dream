@@ -33,6 +33,7 @@ npm add react react-dom recompose ramda
   - [fork](#forkcomponent--)
   - [addProps](#addpropsprops--propstoadd--object)
   - [removeProps](#removepropspropnamestoremove--string)
+  - [defaultProps](#defaultprops--props--object)
   - [style](#styleprops--stylestoadd--object)
   - [name](#namenewdisplayname--string)
   - [rotate](#rotateprops--rotation--number)
@@ -437,6 +438,32 @@ const ButtonWithStates = Html.Button
 
 ```js
 .contramap(({title, hovered, ...otherProps}) => otherProps)
+```
+
+### defaultProps(props : Object)
+
+`defaultProps` allows you to set the, well, `defaultProps` of the wrapper React component.
+
+```js
+const SubmitButton = Html.Button
+  .defaultProps({ type: 'submit' })
+```
+
+#### `defaultProps` is an use case of `map`
+
+
+```js
+const SubmitButton = Html.Button
+  .defaultProps({ type: 'submit' })
+```
+
+Under the hood is using `recompose`’s `defaultProps` function:
+
+```js
+import { defaultProps } from 'recompose'
+
+const SubmitButton = Html.Button
+  .map(defaultProps({ type: 'submit' }))
 ```
 
 ### style(props => stylesToAdd : Object)
