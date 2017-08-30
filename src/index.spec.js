@@ -7,11 +7,13 @@ import ap from './partialApplication/ap'
 import chain from './partialApplication/chain'
 import contramap from './partialApplication/contramap'
 import debug from './partialApplication/debug'
+import defaultProps from './partialApplication/defaultProps'
 import fork from './partialApplication/fork'
 import log from './partialApplication/log'
 import map from './partialApplication/map'
 import name from './partialApplication/name'
 import promap from './partialApplication/promap'
+import propTypes from './partialApplication/propTypes'
 import removeProps from './partialApplication/removeProps'
 import rotate from './partialApplication/rotate'
 import scale from './partialApplication/scale'
@@ -43,6 +45,10 @@ describe('entrypoint', () => {
     equal(debug, entrypoint.debug)
   })
 
+  it('exposes defaultProps', () => {
+    equal(defaultProps, entrypoint.defaultProps)
+  })
+
   it('exposes fork', () => {
     equal(fork, entrypoint.fork)
   })
@@ -61,6 +67,10 @@ describe('entrypoint', () => {
 
   it('exposes promap', () => {
     equal(promap, entrypoint.promap)
+  })
+
+  it('exposes propTypes', () => {
+    equal(propTypes, entrypoint.propTypes)
   })
 
   it('exposes removeProps', () => {

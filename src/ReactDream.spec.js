@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { create } from 'react-test-renderer'
 import ReactDream, { of } from './ReactDream'
-import { equal } from 'assert'
+import { deepEqual, equal } from 'assert'
 import { identity } from 'ramda'
 
 describe('ReactDream', () => {
@@ -401,6 +401,30 @@ describe('ReactDream', () => {
           equal(result.style.transform, 'translateZ(40px)')
         })
       })
+    })
+  })
+
+  describe('defaultProps', () => {
+    it('sets the defaultProps', () => {
+      const defaultProps = {
+        title: 'Hello',
+        description: 'Default Props',
+      }
+      const Enhanced = ReactDream(x => x).defaultProps(defaultProps)
+
+      deepEqual(Enhanced.Component.defaultProps, defaultProps)
+    })
+  })
+
+  describe('propTypes', () => {
+    it('sets the propTypes', () => {
+      const propTypes = {
+        title: 'dummy propType',
+        description: 'dummy propType',
+      }
+      const Enhanced = ReactDream(x => x).propTypes(propTypes)
+
+      deepEqual(Enhanced.Component.propTypes, propTypes)
     })
   })
 

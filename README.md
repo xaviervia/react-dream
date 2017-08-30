@@ -33,6 +33,8 @@ npm add react react-dom recompose ramda
   - [fork](#forkcomponent--)
   - [addProps](#addpropsprops--propstoadd--object)
   - [removeProps](#removepropspropnamestoremove--string)
+  - [defaultProps](#defaultpropsprops--object)
+  - [propTypes](#proptypesproptypes--object)
   - [style](#styleprops--stylestoadd--object)
   - [name](#namenewdisplayname--string)
   - [rotate](#rotateprops--rotation--number)
@@ -437,6 +439,66 @@ const ButtonWithStates = Html.Button
 
 ```js
 .contramap(({title, hovered, ...otherProps}) => otherProps)
+```
+
+### defaultProps(props : Object)
+
+`defaultProps` allows you to set the, well, `defaultProps` of the wrapped React component.
+
+```js
+const SubmitButton = Html.Button
+  .defaultProps({ type: 'submit' })
+```
+
+#### `defaultProps` is an use case of `map`
+
+```js
+const SubmitButton = Html.Button
+  .defaultProps({ type: 'submit' })
+```
+
+Under the hood is using `recompose`’s `defaultProps` function:
+
+```js
+import { defaultProps } from 'recompose'
+
+const SubmitButton = Html.Button
+  .map(defaultProps({ type: 'submit' }))
+```
+
+### propTypes(propTypes : Object)
+
+`propTypes` sets the `propTypes` of the React component.
+
+```js
+import PropTypes from 'prop-types'
+
+const Title = Html.H1
+  .style(({ highlighted }) => ({
+    backgroundColor: highlighted ? 'yellow' : 'transparent'
+  }))
+  .propTypes({
+    children: PropTypes.node,
+    highlighted: PropTypes.bool
+  })
+```
+
+#### `propTypes` is an use case of `map`
+
+The example above is equivalent to:
+
+```js
+import PropTypes from 'prop-types'
+import { setPropTypes } from 'recompose'
+
+const Title = Html.H1
+  .style(({ highlighted }) => ({
+    backgroundColor: highlighted ? 'yellow' : 'transparent'
+  }))
+  .map(setPropTypes({
+    children: PropTypes.node,
+    highlighted: PropTypes.bool
+  }))
 ```
 
 ### style(props => stylesToAdd : Object)
