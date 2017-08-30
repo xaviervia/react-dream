@@ -1,6 +1,7 @@
 import compose from 'recompose/compose'
 import setDisplayName from 'recompose/setDisplayName'
 import recomposeDefaultProps from 'recompose/defaultProps'
+import setPropTypes from 'recompose/setPropTypes'
 import doAp from './internals/doAp'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
@@ -69,6 +70,9 @@ const removeProps = Component => (...propsToRemove) =>
     return propsCopy
   })
 
+// propTypes : Component -> (PropTypes) -> ReactDream
+const propTypes = Component => propTypesToSet => ReactDream(setPropTypes(propTypesToSet)(Component))
+
 // translate : Component -> (Props -> [Number]) -> ReactDream
 const translate = Component => getTranslateFromProps =>
   ReactDream(doTranslate(getTranslateFromProps)(Component))
@@ -105,6 +109,7 @@ const ReactDream = Component => ({
   fork: fork(Component),
   name: name(Component),
   log: log(Component),
+  propTypes: propTypes(Component),
   removeProps: removeProps(Component),
   rotate: rotate(Component),
   scale: scale(Component),

@@ -410,10 +410,21 @@ describe('ReactDream', () => {
         title: 'Hello',
         description: 'Default Props',
       }
-      const Component = x => x
       const Enhanced = ReactDream(x => x).defaultProps(defaultProps)
 
       deepEqual(Enhanced.Component.defaultProps, defaultProps)
+    })
+  })
+
+  describe('propTypes', () => {
+    it('sets the propTypes', () => {
+      const propTypes = {
+        title: 'dummy propType',
+        description: 'dummy propType',
+      }
+      const Enhanced = ReactDream(x => x).propTypes(propTypes)
+
+      deepEqual(Enhanced.Component.propTypes, propTypes)
     })
   })
 

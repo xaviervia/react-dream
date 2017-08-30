@@ -13,6 +13,7 @@ import log from './partialApplication/log'
 import map from './partialApplication/map'
 import name from './partialApplication/name'
 import promap from './partialApplication/promap'
+import propTypes from './partialApplication/propTypes'
 import removeProps from './partialApplication/removeProps'
 import rotate from './partialApplication/rotate'
 import scale from './partialApplication/scale'
@@ -66,6 +67,10 @@ describe('entrypoint', () => {
 
   it('exposes promap', () => {
     equal(promap, entrypoint.promap)
+  })
+
+  it('exposes propTypes', () => {
+    equal(propTypes, entrypoint.propTypes)
   })
 
   it('exposes removeProps', () => {
