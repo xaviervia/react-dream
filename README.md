@@ -29,6 +29,7 @@ npm add react react-dom recompose ramda
   - [contramap](#contramapprops--modifiedprops)
   - [promap](#promapprops--modifiedprops-component--enhancedcomponent)
   - [ap + of](#ap--of)
+  - [concat + empty](#concat--empty)
   - [chain](#chain)
   - [fork](#forkcomponent--)
   - [addProps](#addpropsprops--propstoadd--object)
@@ -208,6 +209,7 @@ ReactDream implements these Fantasy Land algebras:
 
 - Profunctor (map, contramap, promap)
 - Applicative (of, ap)
+- Monoid (concat, empty)
 - Monad (chain)
 
 Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for more details.
@@ -325,6 +327,88 @@ render(
   , domElement
 )
 ```
+
+### concat + empty
+
+> **Note**: because `concat` uses arrays for composing React elements as siblings, it only works in React 16+
+
+`concat` constructs a new component that wraps the current component and another one being passed as siblings, passing the props to both of them. For example:
+
+```js
+import { Html } from 'react-dream'
+
+const Header = Html.H1
+  .concat(Html.P)
+```
+
+Since props are passed to both elements in the composition, invoking the above defined `Header` like this:
+
+```js
+<Header.Component>Hello</Header.Component>
+```
+
+…will result in:
+
+```html
+<h1>Hello</h1>
+<p>Hello</p>
+```
+
+So to make concatenation more useful, it is necessary for the elements to be configured to capture the props that are useful for them:
+
+```js
+import { Html } from 'react-dream'
+
+const Header = Html.H1
+  .contramap(({title}) => ({children: title}))
+  .concat(
+    Html.P
+      .contramap(({description}) => ({children: description}))
+  )
+```
+
+This way the composition can be used like this:
+
+```js
+<Header.Component
+  title='Hello'
+  description='World!'
+/>
+```
+
+…and will result in:
+
+```html
+<h1>Hello</h1>
+<p>World!</p>
+```
+
+Note: while `concat` is for all purposes associative and follows the laws for Semigroup as far as the resulting elements in the DOM are concerned, the React Components themselves are not joined together in an associative way, and this can be seen in the React DevTools.
+
+As far as I am aware, since putting aside the DevTools and other React tree artifacts this `concat` implementation is indeed associative, this is all right according to the Fantasy Land specification. My reasoning is that it’s within the limits of JavaScript to not be able to assert the complete equivalence of the two structures, in particular two functions, which is what React components are.
+
+#### `empty` - the identity ReactDream
+
+The result of concatenating a component with a component that always returns `false` is equivalent to just having the original component, since returning `false` will make React ignore that result, and the `empty` component will have no effect in the DOM.
+
+So for example `Html.H1` is equivalent to `Html.H1.concat(ReactDream.empty())`.
+
+This is useful because it means that a list implementation that supports `fold` can construct a sibling structure very easily. Let’s see an example using `immutable-ext`’s `List`:
+
+```js
+import { Html, empty } from 'react-dream'
+import { List } from 'immutable-ext'
+
+const Header = List([
+    Html.H1.contramap(({title}) => ({children: title})),
+    Html.P.contramap(({description}) => ({children: description})),
+  ])
+  .fold(empty)
+```
+
+This has the same result as the example above, but it is a little more readable if we want to keep adding siblings to the construction.
+
+To follow up on the disclaimer for `concat`: this way of defining equivalence for components is of course a little hairy, since the `empty` component will show in the React tree, but for practical purposes the reasoning is sound, and it is analog to considering the `x => x` function to be identity with regards to function composition: the result of composing any function with `x => x` is not _literally_ the same function, but rather a function that is for all intents and purposes equivalent to the original function. The identity function will show, for example, in the call stack when debugging.
 
 ### chain
 
