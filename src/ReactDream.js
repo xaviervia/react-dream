@@ -2,12 +2,14 @@ import compose from 'recompose/compose'
 import setDisplayName from 'recompose/setDisplayName'
 import recomposeDefaultProps from 'recompose/defaultProps'
 import setPropTypes from 'recompose/setPropTypes'
+import withDebugger from '@hocs/with-debugger'
+import withLog from '@hocs/with-log'
 import doAp from './internals/doAp'
+import doConcat from './internals/doConcat'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
 import doPromap from './internals/doPromap'
-import withDebugger from '@hocs/with-debugger'
-import withLog from '@hocs/with-log'
+import monoidIdentity from './internals/monoidIdentity'
 import doRotate from './internals/doRotate'
 import doTranslate from './internals/doTranslate'
 import doScale from './internals/doScale'
@@ -25,6 +27,13 @@ const chain = Component => kleisliReactDreamComponent => kleisliReactDreamCompon
 
 // map : Component -> (Component -> Component) -> ReactDream
 const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderComponent)(Component))
+
+// concat : Component -> Component -> ReactDream
+const concat = Component => OtherComponent =>
+  ReactDream(doConcat(OtherComponent.Component)(Component))
+
+// empty : () -> ReactDream
+export const empty = () => reactDreamMonoidIdentity
 
 // contramap : Component -> (a -> Props) -> ReactDream
 const contramap = Component => propsPreprocessor =>
@@ -98,6 +107,7 @@ const ReactDream = Component => ({
   // Algebras
   ap: ap(Component),
   chain: chain(Component),
+  concat: concat(Component),
   contramap: contramap(Component),
   map: map(Component),
   promap: promap(Component),
@@ -118,6 +128,9 @@ const ReactDream = Component => ({
 })
 
 ReactDream.of = ReactDream
+ReactDream.empty = empty
+
+const reactDreamMonoidIdentity = ReactDream(monoidIdentity)
 
 export const of = ReactDream.of
 

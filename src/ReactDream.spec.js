@@ -12,180 +12,230 @@ describe('ReactDream', () => {
     equal(ReactDreamComponent.Component, Component)
   })
 
-  describe('ap', () => {
-    it('passes the argument to the component', () => {
-      const ReactDreamComponent = ReactDream(x => !x)
+  describe('Functor', () => {
+    describe('map', () => {
+      it('runs the Component through the HoC and puts it back in a ReactDream', () => {
+        const Component = 1
+        const higherOrderComponent = x => x + 1
+        const EnhancedReactDreamComponent = ReactDream(Component).map(higherOrderComponent)
 
-      equal(ReactDreamComponent.ap(ReactDream(false)).Component, true)
+        equal(EnhancedReactDreamComponent.Component, 2)
+      })
     })
   })
 
-  describe('chain', () => {
-    it('calls the argument function with the Component', () => {
-      const ReactDreamComponent = ReactDream(x => x + 1)
+  describe('Apply', () => {
+    describe('ap', () => {
+      it('passes the argument to the component', () => {
+        const ReactDreamComponent = ReactDream(x => !x)
 
-      equal(
-        ReactDreamComponent.chain(Component => ReactDream(x => Component(x) + 1)).Component(0),
-        2
-      )
+        equal(ReactDreamComponent.ap(ReactDream(false)).Component, true)
+      })
     })
   })
 
-  describe('contramap', () => {
-    describe('is a referentially transparent function component', () => {
-      it('pre composes the propsPreprocesssor', () => {
-        const ReferentiallyTransparentComponent = x => !x
-        const propsPreprocessor = () => true
-        const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
+  describe('Applicative', () => {
+    describe('ReactDream.of', () => {
+      it('wraps the Component', () => {
+        const Component = x => x
+        const ReactDreamComponent = ReactDream.of(Component)
 
-        equal(ReactDreamComponent.contramap(propsPreprocessor).Component(), false)
-      })
-
-      describe('it has name', () => {
-        it('preserves the name as displayName', () => {
-          function ReferentiallyTransparentComponent(x) {
-            return x
-          }
-
-          const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
-
-          equal(
-            ReactDreamComponent.contramap(x => x).Component.displayName,
-            'ReferentiallyTransparentComponent'
-          )
-        })
-      })
-
-      describe('it has displayName', () => {
-        it('preserves it', () => {
-          const ReferentiallyTransparentComponent = x => x
-          ReferentiallyTransparentComponent.displayName = 'Casablanca'
-
-          const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
-
-          equal(ReactDreamComponent.contramap(x => x).Component.displayName, 'Casablanca')
-        })
+        equal(ReactDreamComponent.Component, Component)
       })
     })
 
-    describe('is not referentially transparent', () => {
-      it('returns a new component that wraps building the inner component with the propsPreprocesssor filtering the props', () => {
-        class NotReferentiallyTransparent extends Component {
-          constructor() {
-            super()
+    describe('of - named export', () => {
+      it('wraps the Component', () => {
+        const Component = x => x
+        const ReactDreamComponent = of(Component)
 
-            this.state = {}
-          }
+        equal(ReactDreamComponent.Component, Component)
+      })
+    })
+  })
 
-          render() {
-            return (
-              <div>
-                {this.props.name}
-              </div>
+  describe('Contravariant', () => {
+    describe('contramap', () => {
+      describe('is a referentially transparent function component', () => {
+        it('pre composes the propsPreprocesssor', () => {
+          const ReferentiallyTransparentComponent = x => !x
+          const propsPreprocessor = () => true
+          const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
+
+          equal(ReactDreamComponent.contramap(propsPreprocessor).Component(), false)
+        })
+
+        describe('it has name', () => {
+          it('preserves the name as displayName', () => {
+            function ReferentiallyTransparentComponent(x) {
+              return x
+            }
+
+            const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
+
+            equal(
+              ReactDreamComponent.contramap(x => x).Component.displayName,
+              'ReferentiallyTransparentComponent'
             )
+          })
+        })
+
+        describe('it has displayName', () => {
+          it('preserves it', () => {
+            const ReferentiallyTransparentComponent = x => x
+            ReferentiallyTransparentComponent.displayName = 'Casablanca'
+
+            const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
+
+            equal(ReactDreamComponent.contramap(x => x).Component.displayName, 'Casablanca')
+          })
+        })
+      })
+
+      describe('is not referentially transparent', () => {
+        it('returns a new component that wraps building the inner component with the propsPreprocesssor filtering the props', () => {
+          class NotReferentiallyTransparent extends Component {
+            constructor() {
+              super()
+
+              this.state = {}
+            }
+
+            render() {
+              return (
+                <div>
+                  {this.props.name}
+                </div>
+              )
+            }
           }
-        }
 
-        const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
+          const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
 
-        const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
+          const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
 
-        const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
+          const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
+
+          const renderer = create(<Enhanced.Component />)
+
+          equal(renderer.toJSON().children, 'Regina Spektor')
+        })
+
+        describe('it has name', () => {
+          it('preserves the name as displayName', () => {
+            class NotReferentiallyTransparent extends Component {
+              constructor() {
+                super()
+
+                this.state = {}
+              }
+
+              render() {
+                return (
+                  <div>
+                    {this.props.name}
+                  </div>
+                )
+              }
+            }
+
+            const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
+
+            const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
+
+            const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
+
+            equal(Enhanced.Component.displayName, 'NotReferentiallyTransparent')
+          })
+        })
+
+        describe('it has displayName', () => {
+          it('preserves it', () => {
+            class NotReferentiallyTransparent extends Component {
+              constructor() {
+                super()
+
+                this.state = {}
+              }
+
+              render() {
+                return (
+                  <div>
+                    {this.props.name}
+                  </div>
+                )
+              }
+            }
+
+            NotReferentiallyTransparent.displayName = 'BeginToHope'
+
+            const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
+
+            const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
+
+            const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
+
+            equal(Enhanced.Component.displayName, 'BeginToHope')
+          })
+        })
+      })
+    })
+  })
+
+  describe('Monad', () => {
+    describe('chain', () => {
+      it('calls the argument function with the Component', () => {
+        const ReactDreamComponent = ReactDream(x => x + 1)
+
+        equal(
+          ReactDreamComponent.chain(Component => ReactDream(x => Component(x) + 1)).Component(0),
+          2
+        )
+      })
+    })
+  })
+
+  describe('Profunctor', () => {
+    describe('promap', () => {
+      it('passes the Component through the higher-order Component and the props preprocessor', () => {
+        const propsPreprocessor = () => ({ name: 'Radiohead' })
+        const higherOrderComponent = Target => ({ name }) =>
+          <div>
+            <Target>
+              {name}
+            </Target>
+          </div>
+
+        const Enhanced = ReactDream(props => <h1 {...props} />).promap(
+          propsPreprocessor,
+          higherOrderComponent
+        )
 
         const renderer = create(<Enhanced.Component />)
 
-        equal(renderer.toJSON().children, 'Regina Spektor')
-      })
-
-      describe('it has name', () => {
-        it('preserves the name as displayName', () => {
-          class NotReferentiallyTransparent extends Component {
-            constructor() {
-              super()
-
-              this.state = {}
-            }
-
-            render() {
-              return (
-                <div>
-                  {this.props.name}
-                </div>
-              )
-            }
-          }
-
-          const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
-
-          const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
-
-          const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
-
-          equal(Enhanced.Component.displayName, 'NotReferentiallyTransparent')
-        })
-      })
-
-      describe('it has displayName', () => {
-        it('preserves it', () => {
-          class NotReferentiallyTransparent extends Component {
-            constructor() {
-              super()
-
-              this.state = {}
-            }
-
-            render() {
-              return (
-                <div>
-                  {this.props.name}
-                </div>
-              )
-            }
-          }
-
-          NotReferentiallyTransparent.displayName = 'BeginToHope'
-
-          const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
-
-          const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
-
-          const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
-
-          equal(Enhanced.Component.displayName, 'BeginToHope')
-        })
+        equal(renderer.toJSON().type, 'div')
+        equal(renderer.toJSON().children[0].props.name, 'Radiohead')
       })
     })
   })
 
-  describe('map', () => {
-    it('runs the Component through the HoC and puts it back in a ReactDream', () => {
-      const Component = 1
-      const higherOrderComponent = x => x + 1
-      const EnhancedReactDreamComponent = ReactDream(Component).map(higherOrderComponent)
+  describe('Semigroup', () => {
+    describe('concat', () => {
+      it('combines two Components so that they return an array of elements', () => {
+        const Concatenation = ReactDream(({ x }) => x).concat(ReactDream(({ y }) => y))
 
-      equal(EnhancedReactDreamComponent.Component, 2)
+        const renderer = create(<Concatenation.Component x={1} y={2} />)
+
+        deepEqual(renderer.toJSON(), [1, 2])
+      })
     })
   })
 
-  describe('promap', () => {
-    it('passes the Component through the higher-order Component and the props preprocessor', () => {
-      const propsPreprocessor = () => ({ name: 'Radiohead' })
-      const higherOrderComponent = Target => ({ name }) =>
-        <div>
-          <Target>
-            {name}
-          </Target>
-        </div>
-
-      const Enhanced = ReactDream(props => <h1 {...props} />).promap(
-        propsPreprocessor,
-        higherOrderComponent
-      )
-
-      const renderer = create(<Enhanced.Component />)
-
-      equal(renderer.toJSON().type, 'div')
-      equal(renderer.toJSON().children[0].props.name, 'Radiohead')
+  describe('Monoid', () => {
+    describe('empty', () => {
+      it('returns false', () => {
+        equal(ReactDream.empty().Component(), false)
+      })
     })
   })
 
@@ -425,24 +475,6 @@ describe('ReactDream', () => {
       const Enhanced = ReactDream(x => x).propTypes(propTypes)
 
       deepEqual(Enhanced.Component.propTypes, propTypes)
-    })
-  })
-
-  describe('ReactDream.of', () => {
-    it('wraps the Component', () => {
-      const Component = x => x
-      const ReactDreamComponent = ReactDream.of(Component)
-
-      equal(ReactDreamComponent.Component, Component)
-    })
-  })
-
-  describe('of - named export', () => {
-    it('wraps the Component', () => {
-      const Component = x => x
-      const ReactDreamComponent = of(Component)
-
-      equal(ReactDreamComponent.Component, Component)
     })
   })
 })
