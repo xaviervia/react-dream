@@ -7,16 +7,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "sagui build",
-    "dist": "babel src/ -d dist/ --ignore spec.js,example/",
-    "format": "sagui format",
-    "prepare": "npm run dist",
-    "start": "sagui develop --port 3000",
-    "test": "sagui test",
-    "test:lint": "sagui test:lint",
-    "test:typecheck": "sagui test:typecheck",
-    "test:unit": "jest",
-    "test:unit:watch": "jest --watch"
+    "dist": "babel src/ -d dist/ --ignore spec.js",
+    "prepublishOnly": "npm run dist",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -45,12 +38,8 @@
     "jest": "^20.0.4",
     "prettier": "^1.5.3",
     "react": "^16.0.0-beta.3",
-    "react-context-props": "^2.2.0",
-    "react-dom": "^16.0.0-beta.3",
     "react-test-renderer": "^16.0.0-beta.3",
-    "react-window-dimensions": "^1.0.1",
-    "recompose": "^0.24.0",
-    "sagui": "^11.0.2"
+    "recompose": "^0.24.0"
   },
   "peerDependencies": {
     "react": "^15.6.1",

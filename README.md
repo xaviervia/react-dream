@@ -68,7 +68,7 @@ const DreamView = ReactDream(props => <div {...props} />)
 
 ### Complete example
 
-Here is an extensive example that can be found in [examples](src/examples/index.js):
+Here is an extensive example that can be found in [examples](https://github.com/xaviervia/react-dream-examples/blob/master/pages/index.js):
 
 > If you are not familiar with Fantasy Land types, I can highly recommend the [video tutorials by Brian Lonsdorf](https://egghead.io/instructors/brian-lonsdorf)
 
