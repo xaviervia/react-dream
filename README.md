@@ -18,7 +18,7 @@ npm add react-dream
 You will also need a couple of peer dependencies:
 
 ```
-npm add react recompose ramda
+npm add react recompose
 ```
 
 ## Table of contents
@@ -78,7 +78,6 @@ Here is an extensive example that can be found in [examples](src/examples/index.
 import React from 'react'
 import { render } from 'react-dom'
 import { withHandlers, withState } from 'recompose'
-import { omit } from 'ramda'
 import { of } from 'react-dream'
 import { Html } from 'react-dream-web-builtins'
 
@@ -103,7 +102,7 @@ const Tagline = Html.P
   .name('Tagline')
 
 const HeaderWrapper = Html.Header
-  .contramap(omit(['clicked', 'updateClicked']))
+  .removeProps('clicked', 'updateClicked')
   .style(({ clicked }) => ({
     backgroundColor: clicked ? 'red' : 'green',
     cursor: 'pointer',
@@ -157,9 +156,8 @@ All methods of `ReactDream` are available as functions that can be partially app
 ```js
 import React from 'react'
 import { render } from 'react-dom'
-import { withHandlers, withState } from 'recompose'
-import { compose, omit } from 'ramda'
-import { ap, contramap, map, name, of, style } from 'react-dream'
+import { compose, withHandlers, withState } from 'recompose'
+import { ap, removeProps, contramap, map, name, of, style } from 'react-dream'
 import { Html } from 'react-dream-web-builtins'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
@@ -197,7 +195,7 @@ const HeaderWrapper = compose(
     cursor: 'pointer',
     padding: 15,
   })),
-  contramap(omit(['clicked', 'updateClicked']))
+  removeProps('clicked', 'updateClicked')
 )(Html.Header)
 
 const Header = compose(
