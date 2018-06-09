@@ -1,4 +1,4 @@
-import * as entrypoint from '.'
+import EntrypointReactDream, * as entrypoint from '.'
 import { equal } from 'assert'
 
 import ReactDream from './ReactDream'
@@ -22,7 +22,7 @@ import translate from './partialApplication/translate'
 
 describe('entrypoint', () => {
   it('exposes ReactDream', () => {
-    equal(ReactDream, entrypoint.ReactDream)
+    equal(ReactDream, EntrypointReactDream)
   })
 
   it('exposes addProps', () => {

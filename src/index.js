@@ -1,7 +1,4 @@
-import * as _Html from './primitives/html'
-import * as _Svg from './primitives/svg'
-
-import _ReactDream from './ReactDream'
+import ReactDream from './ReactDream'
 
 export { default as createElementWithProps } from './createElementWithProps'
 
@@ -27,7 +24,6 @@ export { default as scale } from './partialApplication/scale'
 export { default as style } from './partialApplication/style'
 export { default as translate } from './partialApplication/translate'
 
-export const ReactDream = _ReactDream
-export const of = _ReactDream
-export const Html = _Html
-export const Svg = _Svg
+export const of = ReactDream
+
+export default ReactDream
