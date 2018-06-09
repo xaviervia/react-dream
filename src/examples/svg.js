@@ -2,14 +2,14 @@ import React from 'react'
 import { render } from 'react-dom'
 import { withHoverProps } from '@klarna/higher-order-components'
 import withWindowDimensions from 'react-window-dimensions'
-import { Svg, of } from '../'
+import ReactDream, { of } from '../'
 
 const withChild = Child => Parent => ({ child = {}, parent = {}, ...props }) =>
   <Parent {...{ ...props, ...parent }}>
     <Child {...{ ...props, ...child }} />
   </Parent>
 
-const Triangle = Svg.Path
+const Triangle = ReactDream(props => <path {...props} />)
   .addProps(() => ({
     d: 'M 50,5 95,97.5 5,97.5 z',
   }))
@@ -20,7 +20,7 @@ const Triangle = Svg.Path
   .name('Triangle')
   .map(withHoverProps({ hovered: true }))
 
-const Layer = Svg.G
+const Layer = ReactDream(props => <g {...props} />)
   .style(({ displacement }) => ({
     transform: `translateX(${displacement}px)`,
   }))
@@ -30,7 +30,7 @@ const Figure = of(withChild).ap(Triangle).ap(Layer).contramap(({ displacement })
   parent: { displacement },
 }))
 
-const Picture = Svg.Svg
+const Picture = ReactDream(props => <svg {...props} />)
   .addProps(({ width, height }) => ({
     viewBox: `0 0 ${width} ${height}`,
   }))

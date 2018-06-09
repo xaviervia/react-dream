@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { withHandlers, withState } from 'recompose'
-import { Html, of } from '../'
+import ReactDream, { of } from '../'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
   <Wrapper {...{ ...props, ...wrapper }}>
@@ -9,21 +9,21 @@ const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...p
     <South {...{ ...props, ...south }} />
   </Wrapper>
 
-const Title = Html.H1
+const Title = ReactDream(props => <h1 {...props} />)
   .style(() => ({
     fontFamily: 'sans-serif',
     fontSize: 18,
   }))
   .name('Title')
 
-const Tagline = Html.P
+const Tagline = ReactDream(props => <p {...props} />)
   .style(() => ({
     fontFamily: 'sans-serif',
     fontSize: 13,
   }))
   .name('Tagline')
 
-const HeaderWrapper = Html.Header
+const HeaderWrapper = ReactDream(props => <header {...props} />)
   .removeProps('clicked', 'updateClicked')
   .style(({ clicked }) => ({
     backgroundColor: clicked ? 'red' : 'green',
