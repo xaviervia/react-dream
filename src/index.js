@@ -1,4 +1,4 @@
-import _ReactDream from './ReactDream'
+import ReactDream from './ReactDream'
 
 export { default as createElementWithProps } from './createElementWithProps'
 
@@ -24,5 +24,6 @@ export { default as scale } from './partialApplication/scale'
 export { default as style } from './partialApplication/style'
 export { default as translate } from './partialApplication/translate'
 
-export const ReactDream = _ReactDream
-export const of = _ReactDream
+export const of = ReactDream
+
+export default ReactDream
