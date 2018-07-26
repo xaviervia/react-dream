@@ -29,6 +29,7 @@ npm add react recompose
   - [contramap](#contramapprops--modifiedprops)
   - [promap](#promapprops--modifiedprops-component--enhancedcomponent)
   - [ap + of](#ap--of)
+  - [concat](#concat)
   - [chain](#chain)
   - [fork](#forkcomponent--)
   - [addProps](#addpropsprops--propstoadd--object)
@@ -221,6 +222,7 @@ ReactDream implements these Fantasy Land algebras:
 
 - Profunctor (map, contramap, promap)
 - Applicative (of, ap)
+- Semigroup (concat)
 - Monad (chain)
 
 Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for more details.
@@ -338,6 +340,63 @@ render(
   , domElement
 )
 ```
+
+### concat
+
+> Requires React 16+
+
+`concat` constructs a new component that wraps the current component and another one being passed as siblings, passing the props to both of them. For example:
+
+```js
+import { Html } from 'react-dream'
+
+const Header = Html.H1
+  .concat(Html.P)
+```
+
+Since props are passed to both elements in the composition, invoking the above defined `Header` like this:
+
+```js
+<Header.Component>Hello</Header.Component>
+```
+
+…will result in:
+
+```html
+<h1>Hello</h1>
+<p>Hello</p>
+```
+
+So to make concatenation more useful, it is necessary for the elements to be configured to capture the props that are useful for them:
+
+```js
+import { Html } from 'react-dream'
+
+const Header = Html.H1
+  .contramap(({title}) => ({children: title}))
+  .concat(
+    Html.P
+      .contramap(({description}) => ({children: description}))
+  )
+```
+
+This way the composition can be used like this:
+
+```js
+<Header.Component
+  title='Hello'
+  description='World!'
+/>
+```
+
+…and will result in:
+
+```html
+<h1>Hello</h1>
+<p>World!</p>
+```
+
+Note: while `concat` is for all practical purposes associative (as far as the resulting elements in the DOM are concerned), the React Components themselves are not joined together in an associative way, and this can be seen in the React DevTools. This violation of associativity is what makes it impossible for ReactDream to implement Monoid.
 
 ### chain
 

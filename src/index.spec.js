@@ -1,10 +1,11 @@
 import EntrypointReactDream, * as entrypoint from '.'
 import { equal } from 'assert'
 
-import ReactDream from './ReactDream'
+import DirectReactDream from './ReactDream'
 import addProps from './partialApplication/addProps'
 import ap from './partialApplication/ap'
 import chain from './partialApplication/chain'
+import concat from './partialApplication/concat'
 import contramap from './partialApplication/contramap'
 import debug from './partialApplication/debug'
 import defaultProps from './partialApplication/defaultProps'
@@ -22,7 +23,7 @@ import translate from './partialApplication/translate'
 
 describe('entrypoint', () => {
   it('exposes ReactDream', () => {
-    equal(ReactDream, EntrypointReactDream)
+    equal(DirectReactDream, EntrypointReactDream)
   })
 
   it('exposes addProps', () => {
@@ -35,6 +36,10 @@ describe('entrypoint', () => {
 
   it('exposes chain', () => {
     equal(chain, entrypoint.chain)
+  })
+
+  it('exposes concat', () => {
+    equal(concat, entrypoint.concat)
   })
 
   it('exposes contramap', () => {
@@ -94,6 +99,6 @@ describe('entrypoint', () => {
   })
 
   it('exposes of', () => {
-    equal(ReactDream, entrypoint.of)
+    equal(DirectReactDream, entrypoint.of)
   })
 })
