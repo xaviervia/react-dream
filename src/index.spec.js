@@ -23,7 +23,7 @@ import translate from './partialApplication/translate'
 
 describe('entrypoint', () => {
   it('exposes ReactDream', () => {
-    equal(ReactDream, EntrypointReactDream)
+    equal(DirectReactDream, EntrypointReactDream)
   })
 
   it('exposes addProps', () => {
@@ -99,6 +99,6 @@ describe('entrypoint', () => {
   })
 
   it('exposes of', () => {
-    equal(ReactDream, entrypoint.of)
+    equal(DirectReactDream, entrypoint.of)
   })
 })
