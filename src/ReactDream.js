@@ -9,7 +9,6 @@ import doConcat from './internals/doConcat'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
 import doPromap from './internals/doPromap'
-import monoidIdentity from './internals/monoidIdentity'
 import doRotate from './internals/doRotate'
 import doTranslate from './internals/doTranslate'
 import doScale from './internals/doScale'
@@ -31,9 +30,6 @@ const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderCom
 // concat : Component -> Component -> ReactDream
 const concat = Component => OtherComponent =>
   ReactDream(doConcat(OtherComponent.Component)(Component))
-
-// empty : () -> ReactDream
-export const empty = () => reactDreamMonoidIdentity
 
 // contramap : Component -> (a -> Props) -> ReactDream
 const contramap = Component => propsPreprocessor =>
@@ -128,9 +124,6 @@ const ReactDream = Component => ({
 })
 
 ReactDream.of = ReactDream
-ReactDream.empty = empty
-
-const reactDreamMonoidIdentity = ReactDream(monoidIdentity)
 
 export const of = ReactDream.of
 

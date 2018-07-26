@@ -232,14 +232,6 @@ describe('ReactDream', () => {
     })
   })
 
-  describe('Monoid', () => {
-    describe('empty', () => {
-      it('returns false', () => {
-        equal(ReactDream.empty().Component(), false)
-      })
-    })
-  })
-
   describe('fork', () => {
     it('exposes the inner Component to the passed in function', () => {
       const Component = props => <hr />
