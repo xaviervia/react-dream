@@ -7,7 +7,7 @@
 
 [Fantasy Land](https://github.com/fantasyland/fantasy-land) type for [React Components](https://facebook.github.io/react/)
 
-**Caution: Extremely Experimental**
+**Caution: Experimental** (not _extremely_ anymore though)
 
 ## Installation
 
@@ -18,7 +18,7 @@ npm add react-dream
 You will also need a couple of peer dependencies:
 
 ```
-npm add react react-dom recompose ramda
+npm add react recompose
 ```
 
 ## Table of contents
@@ -47,16 +47,40 @@ npm add react react-dom recompose ramda
 
 ## Usage
 
-Here is an extensive example that can be found in [examples](src/examples/index.js):
+### Lifting React components into ReactDream
+
+For example, for a ReactNative View:
+
+```js
+import ReactDream from 'react-dream'
+import { View } from 'react-native'
+
+const DreamView = ReactDream(View)
+```
+
+…or for a web `div`:
+
+```js
+import React from 'react'
+import ReactDream from 'react-dream'
+
+const DreamView = ReactDream(props => <div {...props} />)
+```
+
+### Complete example
+
+Here is an extensive example that can be found in [examples](https://github.com/xaviervia/react-dream-examples/blob/master/pages/index.js):
 
 > If you are not familiar with Fantasy Land types, I can highly recommend the [video tutorials by Brian Lonsdorf](https://egghead.io/instructors/brian-lonsdorf)
+
+> Note that this and the following examples use already-built wrappers that you can pull from [react-dream-web-builtins](https://github.com/xaviervia/react-dream-web-builtins). This are convenient but might not be easy to tree shake when bundling, so use with caution.
 
 ```js
 import React from 'react'
 import { render } from 'react-dom'
 import { withHandlers, withState } from 'recompose'
-import { omit } from 'ramda'
-import { Html, of } from 'react-dream'
+import { of } from 'react-dream'
+import { Html } from 'react-dream-web-builtins'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
   <Wrapper { ...props } { ...wrapper }}>
@@ -79,7 +103,7 @@ const Tagline = Html.P
   .name('Tagline')
 
 const HeaderWrapper = Html.Header
-  .contramap(omit(['clicked', 'updateClicked']))
+  .removeProps('clicked', 'updateClicked')
   .style(({ clicked }) => ({
     backgroundColor: clicked ? 'red' : 'green',
     cursor: 'pointer',
@@ -128,14 +152,14 @@ render(
 
 ### Pointfree style
 
-All methods of `ReactDream` are available as functions that can be partially applied and then take the ReactDream object as the last argument. This makes it possible to write compositions that can then be applied to a ReactDream object. The elements of the example above could be rewritten as:
+All methods of `ReactDream` are available as functions that can be partially applied and then take the ReactDream component as the last argument. This makes it possible to write compositions that can then be applied to a ReactDream object. The elements of the example above could be rewritten as:
 
 ```js
 import React from 'react'
 import { render } from 'react-dom'
-import { withHandlers, withState } from 'recompose'
-import { compose, omit } from 'ramda'
-import { Html, ap, contramap, map, name, of, style } from 'react-dream'
+import { compose, withHandlers, withState } from 'recompose'
+import { ap, removeProps, contramap, map, name, of, style } from 'react-dream'
+import { Html } from 'react-dream-web-builtins'
 
 const withChildren = North => South => Wrapper => ({ north, south, wrapper, ...props }) =>
   <Wrapper { ...props } { ...wrapper }}>
@@ -172,7 +196,7 @@ const HeaderWrapper = compose(
     cursor: 'pointer',
     padding: 15,
   })),
-  contramap(omit(['clicked', 'updateClicked']))
+  removeProps('clicked', 'updateClicked')
 )(Html.Header)
 
 const Header = compose(
@@ -185,17 +209,6 @@ const Header = compose(
   ap(Tagline),
   ap(Title)
 )(of(withChildren))
-```
-
-### Lifting your own component into ReactDream
-
-For example, for a ReactNative View:
-
-```js
-import { ReactDream } from 'react-dream'
-import { View } from 'react-native'
-
-const DreamView = ReactDream(View)
 ```
 
 ## API
@@ -220,7 +233,7 @@ Check [Fantasy Land](https://github.com/fantasyland/fantasy-land) for more detai
 
 ```js
 import React from 'react'
-import { ReactDream } from 'react-dream'
+import ReactDream from 'react-dream'
 import { withHandlers, withState } from 'recompose'
 
 const Counter = ReactDream(({counter, onClick}) =>
@@ -415,7 +428,8 @@ To follow up on the disclaimer for `concat`: this way of defining equivalence fo
 `chain` is useful as a escape hatch if you want to escape from ReactDream and do something very React-y
 
 ```js
-import { Svg, ReactDream } from 'react-dream'
+import ReactDream from 'react-dream'
+import { Svg } from 'react-dream-web-builtins'
 
 const wrapWithGLayer = Component => ReactDream(props =>
   <g>
@@ -447,7 +461,7 @@ H1.fork(Component => render(<Component>Hello</Component>, domElement))
 `addProps` allows you to pass a function whose result will be merged with the regular props. This is useful to add derived props to a component:
 
 ```js
-import { Svg } from 'react-dream'
+import { Svg } from 'react-dream-web-builtins'
 
 const Picture = Svg.Svg
   .addProps(props => ({
@@ -466,7 +480,7 @@ render(
 The new props will be merged below the regular ones, so that the consumer can always override your props:
 
 ```diff
-import { Svg } from 'react-dream'
+import { Svg } from 'react-dream-web-builtins'
 
 const Picture = Svg.Svg
   .addProps(props => ({
@@ -808,7 +822,7 @@ import withLog from '@hocs/with-log'
 ```js
 import React from 'react'
 import { render } from 'react-dom'
-import { Html } from 'react-dream'
+import { Html } from 'react-dream-web-builtins'
 
 const App = Html.Div
   .debug()
@@ -841,15 +855,17 @@ import withDebugger from '@hocs/with-debugger'
 
 ## Built-in Primitives
 
-ReactDream ships with a complete set of HTML and SVG primitives lifted into the type. You can access them like:
+A separate package, [react-dream-web-builtins](https://github.com/xaviervia/react-dream-web-builtins) ships with a complete set of HTML and SVG primitives lifted into the type. You can access them like:
 
 ```js
-import { Svg, Html } from 'react-dream'
+import { Svg, Html } from 'react-dream-web-builtins'
 
 const MyDiv = Html.Div
 
 const MyLayer = Svg.G
 ```
+
+Read more in the package [README]((https://github.com/xaviervia/react-dream-web-builtins))
 
 ## License
 

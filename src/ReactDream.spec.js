@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { create } from 'react-test-renderer'
 import ReactDream, { of } from './ReactDream'
 import { deepEqual, equal } from 'assert'
-import { identity } from 'ramda'
+
+const identity = x => x
 
 describe('ReactDream', () => {
   it('wraps the Component', () => {
