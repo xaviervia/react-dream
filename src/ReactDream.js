@@ -6,7 +6,8 @@ import withDebugger from '@hocs/with-debugger'
 import withLog from '@hocs/with-log'
 import doAp from './internals/doAp'
 import doConcat from './internals/doConcat'
-import doContramap from './internals/doContramap'
+import doStatefulContramap from './internals/stateful/doContramap'
+import doStatelessContramap from './internals/stateless/doContramap'
 import doMap from './internals/doMap'
 import doPromap from './internals/doPromap'
 import doRotate from './internals/doRotate'
@@ -31,9 +32,13 @@ const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderCom
 const concat = Component => OtherComponent =>
   ReactDream(doConcat(OtherComponent.Component)(Component))
 
-// contramap : Component -> (a -> Props) -> ReactDream
-const contramap = Component => propsPreprocessor =>
-  ReactDream(doContramap(propsPreprocessor)(Component))
+// statelessContramap : Component -> (a -> Props) -> ReactDream
+const statelessContramap = Component => propsPreprocessor =>
+  ReactDream(doStatelessContramap(propsPreprocessor)(Component))
+
+// statefulContramap : Component -> (a -> Props) -> ReactDream
+const statefulContramap = Component => propsPreprocessor =>
+  ReactDream(doStatefulContramap(propsPreprocessor)(Component))
 
 // promap : Component -> (a -> Props) -> (Component -> Component) -> ReactDream
 const promap = Component => (propsPreprocessor, higherOrderComponent) =>
@@ -96,15 +101,15 @@ const style = Component => getStyleFromProps =>
 // TYPE
 // ////////////////////////////////////////////////////////////////////////// //
 
-// ReactDream : Component -> ReactDream
-const ReactDream = Component => ({
+// ReactDream.Stateless : Component -> ReactDream
+export const Stateless = Component => ({
   Component,
 
   // Algebras
   ap: ap(Component),
   chain: chain(Component),
   concat: concat(Component),
-  contramap: contramap(Component),
+  contramap: statelessContramap(Component),
   map: map(Component),
   promap: promap(Component),
 
@@ -122,6 +127,38 @@ const ReactDream = Component => ({
   style: style(Component),
   translate: translate(Component),
 })
+
+// ReactDream.Stateful : Component -> ReactDream
+export const Stateful = Component => ({
+  Component,
+
+  // Algebras
+  ap: ap(Component),
+  chain: chain(Component),
+  concat: concat(Component),
+  contramap: statefulContramap(Component),
+  map: map(Component),
+  promap: promap(Component),
+
+  // Custom helpers
+  addProps: addProps(Component),
+  debug: debug(Component),
+  defaultProps: defaultProps(Component),
+  fork: fork(Component),
+  name: name(Component),
+  log: log(Component),
+  propTypes: propTypes(Component),
+  removeProps: removeProps(Component),
+  rotate: rotate(Component),
+  scale: scale(Component),
+  style: style(Component),
+  translate: translate(Component),
+})
+
+const ReactDream = Component =>
+  isReferentiallyTransparentFunctionComponent(Component)
+    ? Stateless(Component)
+    : Stateful(Component)
 
 ReactDream.of = ReactDream
 
