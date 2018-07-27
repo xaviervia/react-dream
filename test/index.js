@@ -26,132 +26,143 @@ import { example, suite } from './dsl'
 
 const entrypointSuite = suite(
   'entrypoint',
-  [
-    example(
-      'exposes ReactDream',
-      () => DirectReactDream,
-      EntrypointReactDream
-    ),
 
-    example(
-      'exposes addProps',
-      () => addProps,
-      entrypoint.addProps
-    ),
+  example(
+    'exposes ReactDream',
+    () => DirectReactDream,
+    EntrypointReactDream
+  ),
 
-    example(
-      'exposes ap',
-      () => ap,
-      entrypoint.ap
-    ),
+  example(
+    'exposes addProps',
+    () => addProps,
+    entrypoint.addProps
+  ),
 
-    example(
-      'exposes chain',
-      () => chain,
-      entrypoint.chain
-    ),
+  example(
+    'exposes ap',
+    () => ap,
+    entrypoint.ap
+  ),
 
-    example(
-      'exposes concat',
-      () => concat,
-      entrypoint.concat
-    ),
+  example(
+    'exposes chain',
+    () => chain,
+    entrypoint.chain
+  ),
 
-    example(
-      'exposes contramap',
-      () => contramap,
-      entrypoint.contramap
-    ),
+  example(
+    'exposes concat',
+    () => concat,
+    entrypoint.concat
+  ),
 
-    example(
-      'exposes debug',
-      () => debug,
-      entrypoint.debug
-    ),
+  example(
+    'exposes contramap',
+    () => contramap,
+    entrypoint.contramap
+  ),
 
-    example(
-      'exposes defaultProps',
-      () => defaultProps,
-      entrypoint.defaultProps
-    ),
+  example(
+    'exposes debug',
+    () => debug,
+    entrypoint.debug
+  ),
 
-    example(
-      'exposes fork',
-      () => fork,
-      entrypoint.fork
-    ),
+  example(
+    'exposes defaultProps',
+    () => defaultProps,
+    entrypoint.defaultProps
+  ),
 
-    example(
-      'exposes log',
-      () => log,
-      entrypoint.log
-    ),
+  example(
+    'exposes fork',
+    () => fork,
+    entrypoint.fork
+  ),
 
-    example(
-      'exposes map',
-      () => map,
-      entrypoint.map
-    ),
+  example(
+    'exposes log',
+    () => log,
+    entrypoint.log
+  ),
 
-    example(
-      'exposes name',
-      () => name,
-      entrypoint.name
-    ),
+  example(
+    'exposes map',
+    () => map,
+    entrypoint.map
+  ),
 
-    example(
-      'exposes promap',
-      () => promap,
-      entrypoint.promap
-    ),
+  example(
+    'exposes name',
+    () => name,
+    entrypoint.name
+  ),
 
-    example(
-      'exposes propTypes',
-      () => propTypes,
-      entrypoint.propTypes
-    ),
+  example(
+    'exposes promap',
+    () => promap,
+    entrypoint.promap
+  ),
 
-    example(
-      'exposes removeProps',
-      () => removeProps,
-      entrypoint.removeProps
-    ),
+  example(
+    'exposes propTypes',
+    () => propTypes,
+    entrypoint.propTypes
+  ),
 
-    example(
-      'exposes rotate',
-      () => rotate,
-      entrypoint.rotate
-    ),
+  example(
+    'exposes removeProps',
+    () => removeProps,
+    entrypoint.removeProps
+  ),
 
-    example(
-      'exposes scale',
-      () => scale,
-      entrypoint.scale
-    ),
+  example(
+    'exposes rotate',
+    () => rotate,
+    entrypoint.rotate
+  ),
 
-    example(
-      'exposes style',
-      () => style,
-      entrypoint.style
-    ),
+  example(
+    'exposes scale',
+    () => scale,
+    entrypoint.scale
+  ),
 
-    example(
-      'exposes translate',
-      () => translate,
-      entrypoint.translate
-    ),
+  example(
+    'exposes style',
+    () => style,
+    entrypoint.style
+  ),
 
-    example(
-      'exposes of',
-      () => DirectReactDream,
-      entrypoint.of
-    ),
-  ]
+  example(
+    'exposes translate',
+    () => translate,
+    entrypoint.translate
+  ),
+
+  example(
+    'exposes of',
+    () => DirectReactDream,
+    entrypoint.of
+  )
 )
 
+import createElementWithPropsSuite from './createElementWithProps'
+import internalsSuite from './internals'
+import partialApplicationSuite from './partialApplication'
+import ReactDreamSuite from './ReactDream'
 import styleFromPropsSuite from './styleFromProps'
+
+import jsDomGlobal from 'jsdom-global'
+
+jsDomGlobal()
 
 washington([
   ...entrypointSuite,
+  ...createElementWithPropsSuite,
+  ...internalsSuite,
+  ...partialApplicationSuite,
+  ...ReactDreamSuite,
   ...styleFromPropsSuite,
 ])
