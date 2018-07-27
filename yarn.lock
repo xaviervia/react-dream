@@ -1318,6 +1318,10 @@ find-up@^2.1.0:
   dependencies:
     locate-path "^2.0.0"
 
+folktale@^v2.0.0-rc1:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/folktale/-/folktale-2.1.0.tgz#3332b9e37b4b92150788b72bd0e2ddd8d70e4096"
+
 for-in@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -1516,6 +1520,18 @@ ignore-walk@^3.0.1:
   resolved "https://registry.yarnpkg.com/ignore-walk/-/ignore-walk-3.0.1.tgz#a83e62e7d272ac0e3b551aaa82831a19b69f82f8"
   dependencies:
     minimatch "^3.0.4"
+
+immutable-ext@^1.0.8:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/immutable-ext/-/immutable-ext-1.1.5.tgz#3cdf27a067527c85817bf161a0dad1361ed579cb"
+
+immutable@^3.8.1:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+
+infestines@^0.4.2:
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/infestines/-/infestines-0.4.9.tgz#51480ddce36430b102835153bddac61a15c4bbde"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -2372,6 +2388,12 @@ parse5@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-1.5.1.tgz#9b7f3b0de32be78dc2401b17573ccaf0f6f59d94"
 
+partial.lenses@^9.4.1:
+  version "9.8.0"
+  resolved "https://registry.yarnpkg.com/partial.lenses/-/partial.lenses-9.8.0.tgz#f8514fccc9eeb539b4dfcdb66249ed18d1f84202"
+  dependencies:
+    infestines "^0.4.2"
+
 path-exists@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/path-exists/-/path-exists-2.1.0.tgz#0feb6c64f0fc518d9a754dd5efb62c7022761f4b"
@@ -2999,6 +3021,30 @@ walker@~1.0.5:
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
   dependencies:
     makeerror "1.0.x"
+
+washington.core@^2.0.0-rc.3:
+  version "2.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/washington.core/-/washington.core-2.0.0-rc.3.tgz#e9b52f736f177961fa962160f9810d4068c2db01"
+  dependencies:
+    folktale "^v2.0.0-rc1"
+    immutable "^3.8.1"
+    immutable-ext "^1.0.8"
+    partial.lenses "^9.4.1"
+
+washington.formatter.terminal@^2.0.0-rc.3:
+  version "2.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/washington.formatter.terminal/-/washington.formatter.terminal-2.0.0-rc.3.tgz#da80f5a8faa4d56a6d7297783e55d657c41e7417"
+  dependencies:
+    chalk "^1.1.3"
+    folktale "^v2.0.0-rc1"
+    partial.lenses "^9.4.1"
+
+washington@^2.0.0-rc.3:
+  version "2.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/washington/-/washington-2.0.0-rc.3.tgz#40d40ef0dde10563f9f469e8ed38a25feae1baf7"
+  dependencies:
+    washington.core "^2.0.0-rc.3"
+    washington.formatter.terminal "^2.0.0-rc.3"
 
 watch@~0.10.0:
   version "0.10.0"
