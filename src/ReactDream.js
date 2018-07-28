@@ -1,10 +1,12 @@
+import React, { Fragment } from 'react'
 import compose from 'recompose/compose'
+import getDisplayName from 'recompose/getDisplayName'
 import setDisplayName from 'recompose/setDisplayName'
 import recomposeDefaultProps from 'recompose/defaultProps'
 import setPropTypes from 'recompose/setPropTypes'
 import withDebugger from '@hocs/with-debugger'
 import withLog from '@hocs/with-log'
-import doConcat from './internals/doConcat'
+
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
 import doPromap from './internals/doPromap'
@@ -21,14 +23,24 @@ const ap = higherOrderComponent => ReactDreamComponent =>
   ReactDream(ReactDreamComponent.fork(higherOrderComponent))
 
 // chain : Component -> (Component -> ReactDream) -> ReactDream
-const chain = Component => kleisliReactDreamComponent => kleisliReactDreamComponent(Component)
-
-// map : Component -> (Component -> Component) -> ReactDream
-const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderComponent)(Component))
+const chain = Component => kleisliReactDreamComponent =>
+  kleisliReactDreamComponent(Component)
 
 // concat : Component -> Component -> ReactDream
-const concat = Component => OtherComponent =>
-  ReactDream(doConcat(OtherComponent.Component)(Component))
+const concat = Component => ReactDreamComponent =>
+  ReactDream(
+    setDisplayName(
+      getDisplayName(Component)
+        .concat(getDisplayName(ReactDreamComponent.CompComponent))
+    )(props => <Fragment>
+      <Component {...props} />
+      <ReactDreamComponent.Component {...props} />
+    </Fragment>)
+  )
+
+// map : Component -> (Component -> Component) -> ReactDream
+const map = Component => higherOrderComponent =>
+  ReactDream(doMap(higherOrderComponent)(Component))
 
 // contramap : Component -> (a -> Props) -> ReactDream
 const contramap = Component => propsPreprocessor =>

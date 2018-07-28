@@ -303,13 +303,17 @@ export default suite(
       example(
         'combines two Components so that they return an array of elements',
         () => {
-          const Concatenation = ReactDream(({ x }) => x).concat(ReactDream(({ y }) => y))
+          const Concatenation = ReactDream(({ x }) => <hr id={x} />)
+            .concat(ReactDream(({ y }) => <br id={y} />))
 
           const renderer = create(<Concatenation.Component x={1} y={2} />)
 
           return renderer.toJSON()
         },
-        [1, 2]
+        [
+          { type: 'hr', props: { id: 1 }, children: null },
+          { type: 'br', props: { id: 2 }, children: null }
+        ]
       )
     )
   ),
