@@ -105,7 +105,8 @@ const removeProps = Component => (...propsToRemove) =>
   })
 
 // propTypes : Component -> (PropTypes) -> ReactDream
-const propTypes = Component => propTypesToSet => ReactDream(setPropTypes(propTypesToSet)(Component))
+const propTypes = Component => propTypesToSet =>
+  ReactDream(setPropTypes(propTypesToSet)(Component))
 
 // translate : Component -> (Props -> [Number]) -> ReactDream
 const translate = Component => getTranslateFromProps =>
