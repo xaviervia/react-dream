@@ -1,6 +1,3 @@
-import { compose } from 'recompose'
-import doContramap from './doContramap'
-
 const calculateTransform = oldTransform => ([x, y, z]) => {
   switch (true) {
     case x != null && y != null && z != null:
@@ -24,15 +21,16 @@ const calculateTransform = oldTransform => ([x, y, z]) => {
   }
 }
 
-// doTranslate : (Props -> [Number]) -> Component -> Component
-export default getTranslateFromProps => Component =>
-  doContramap(props => ({
+// getTranslateStyle : (Props a -> [Number]) -> Props a -> Props b
+export default getTranslateFromProps =>
+  props => ({
     ...props,
     style: {
       ...props.style,
-      transform: compose(
-        calculateTransform(props && props.style && props.style.transform),
-        getTranslateFromProps
-      )(props),
+      transform: calculateTransform(
+        props && props.style && props.style.transform
+      )(
+        getTranslateFromProps(props)
+      ),
     },
-  }))(Component)
+  })

@@ -7,18 +7,20 @@ import setPropTypes from 'recompose/setPropTypes'
 import withDebugger from '@hocs/with-debugger'
 import withLog from '@hocs/with-log'
 
-import doContramap from './internals/doContramap'
+import isReferentiallyTransparentFunctionComponent from './isReferentiallyTransparentFunctionComponent'
+
 import doMap from './internals/doMap'
-import doPromap from './internals/doPromap'
-import doRotate from './internals/doRotate'
-import doTranslate from './internals/doTranslate'
-import doScale from './internals/doScale'
+import getRotateStyle from './helpers/getRotateStyle'
+import getScaleStyle from './helpers/getScaleStyle'
+import getTranslateStyle from './helpers/getTranslateStyle'
 import styleFromProps from './styleFromProps'
 
 // ALGEBRAS
 // ////////////////////////////////////////////////////////////////////////// //
 
-// ap : (Component -> Component) -> ReactDream -> ReactDream
+// ap : (ReactComponent a e -> b) ->
+//      ReactDream (ReactComponent a e) ->
+//      ReactDream (b)
 const ap = higherOrderComponent => ReactDreamComponent =>
   ReactDream(ReactDreamComponent.fork(higherOrderComponent))
 
@@ -26,7 +28,9 @@ const ap = higherOrderComponent => ReactDreamComponent =>
 const chain = Component => kleisliReactDreamComponent =>
   kleisliReactDreamComponent(Component)
 
-// concat : Component -> Component -> ReactDream
+// concat : ReactComponent a e ->
+//          ReactComponent b f ->
+//          ReactDream (ReactComponent c g)
 const concat = Component => ReactDreamComponent =>
   ReactDream(
     setDisplayName(
@@ -42,13 +46,25 @@ const concat = Component => ReactDreamComponent =>
 const map = Component => higherOrderComponent =>
   ReactDream(doMap(higherOrderComponent)(Component))
 
-// contramap : Component -> (a -> Props) -> ReactDream
-const contramap = Component => propsPreprocessor =>
-  ReactDream(doContramap(propsPreprocessor)(Component))
+// contramap : ReactComponent a e ->
+//             (a -> b) ->
+//             ReactDream (ReactComponent b e)
+const contramap = Component => propsPreprocessor => {
+  const Enhanced = isReferentiallyTransparentFunctionComponent(Component)
+    ? compose(Component, propsPreprocessor)
+    : props => <Component {...propsPreprocessor(props)} />
 
-// promap : Component -> (a -> Props) -> (Component -> Component) -> ReactDream
-const promap = Component => (propsPreprocessor, higherOrderComponent) =>
-  ReactDream(doPromap(propsPreprocessor, higherOrderComponent)(Component))
+  Enhanced.displayName = getDisplayName(Component)
+
+  return ReactDream(Enhanced)
+}
+
+// doPromap : ((a -> Props), (Component -> Component)) -> Component -> Component
+// // promap : Component -> (a -> Props) -> (Component -> Component) -> ReactDream
+// const promap = Component => (propsPreprocessor, higherOrderComponent) =>
+//   ReactDream(doPromap(propsPreprocessor, higherOrderComponent)(Component))
+//  compose(doMap(higherOrderComponent), doContramap(propsPreprocessor))
+
 
 // CUSTOM HELPERS
 // ////////////////////////////////////////////////////////////////////////// //
@@ -91,14 +107,15 @@ const propTypes = Component => propTypesToSet => ReactDream(setPropTypes(propTyp
 
 // translate : Component -> (Props -> [Number]) -> ReactDream
 const translate = Component => getTranslateFromProps =>
-  ReactDream(doTranslate(getTranslateFromProps)(Component))
+  contramap(Component)(getTranslateStyle(getTranslateFromProps))
 
 // rotate : Component -> (Props -> Number) -> ReactDream
 const rotate = Component => getRotateFromProps =>
-  ReactDream(doRotate(getRotateFromProps)(Component))
+  contramap(Component)(getRotateStyle(getRotateFromProps))
 
 // scale : Component -> (Props -> Number) -> ReactDream
-const scale = Component => getScaleFromProps => ReactDream(doScale(getScaleFromProps)(Component))
+const scale = Component => getScaleFromProps =>
+  contramap(Component)(getScaleStyle(getScaleFromProps))
 
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
@@ -117,7 +134,7 @@ const ReactDream = Component => ({
   concat: concat(Component),
   contramap: contramap(Component),
   map: map(Component),
-  promap: promap(Component),
+  // promap: promap(Component),
 
   // Custom helpers
   addProps: addProps(Component),
