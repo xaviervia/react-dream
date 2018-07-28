@@ -9,7 +9,6 @@ import withLog from '@hocs/with-log'
 
 import isReferentiallyTransparentFunctionComponent from './isReferentiallyTransparentFunctionComponent'
 
-import doMap from './internals/doMap'
 import getRotateStyle from './helpers/getRotateStyle'
 import getScaleStyle from './helpers/getScaleStyle'
 import getTranslateStyle from './helpers/getTranslateStyle'
@@ -42,9 +41,11 @@ const concat = Component => ReactDreamComponent =>
     </Fragment>)
   )
 
-// map : Component -> (Component -> Component) -> ReactDream
-const map = Component => higherOrderComponent =>
-  ReactDream(doMap(higherOrderComponent)(Component))
+// map : ReactComponent e a ->
+//       (ReactComponent e a -> ReactComponent e b) ->
+//       ReactDream (ReactComponent e b)
+const map = Component => postProcessor =>
+  ReactDream(props => postProcessor(<Component {...props} />))
 
 // contramap : ReactComponent a e ->
 //             (a -> b) ->

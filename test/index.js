@@ -149,7 +149,6 @@ const entrypointSuite = suite(
 )
 
 import createElementWithPropsSuite from './createElementWithProps'
-import internalsSuite from './internals'
 import partialApplicationSuite from './partialApplication'
 import ReactDreamSuite from './ReactDream'
 import styleFromPropsSuite from './styleFromProps'
@@ -161,8 +160,7 @@ jsDomGlobal()
 washington([
   ...entrypointSuite,
   ...createElementWithPropsSuite,
-  ...internalsSuite,
   ...partialApplicationSuite,
   ...ReactDreamSuite,
   ...styleFromPropsSuite,
-])
+].filter(({ description }) => /Functor: map:/.test(description)))

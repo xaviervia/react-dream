@@ -23,17 +23,31 @@ export default suite(
       'map',
 
       example(
-        'runs the Component through the HoC and puts it back in a ReactDream',
+        'passes the resulting element through the function',
 
         () => {
-          const Component = 1
-          const higherOrderComponent = x => x + 1
-          const EnhancedReactDreamComponent = ReactDream(Component).map(higherOrderComponent)
+          const Component = () => <h1>Hello</h1>
+          const elementProcessor = element => <h2>{element}</h2>
+          const EnhancedReactDreamComponent = ReactDream(Component)
+            .map(elementProcessor)
 
-          return EnhancedReactDreamComponent.Component
+          return create(<EnhancedReactDreamComponent.Component />)
+            .toJSON()
         },
 
-        2
+        {
+          type: 'h2',
+          props: {},
+          children: [
+            {
+              type: 'h1',
+              props: {},
+              children: [
+                'Hello'
+              ]
+            }
+          ]
+        }
       )
     )
   ),
@@ -88,7 +102,9 @@ export default suite(
           () => {
             const ReferentiallyTransparentComponent = x => !x
             const propsPreprocessor = () => true
-            const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
+            const ReactDreamComponent = ReactDream(
+              ReferentiallyTransparentComponent
+            )
 
             return ReactDreamComponent.contramap(propsPreprocessor).Component()
           },
@@ -106,7 +122,10 @@ export default suite(
 
               const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
 
-              return ReactDreamComponent.contramap(x => x).Component.displayName
+              return ReactDreamComponent
+                .contramap(x => x)
+                .Component
+                .displayName
             },
             'ReferentiallyTransparentComponent'
           )
@@ -120,9 +139,14 @@ export default suite(
               const ReferentiallyTransparentComponent = x => x
               ReferentiallyTransparentComponent.displayName = 'Casablanca'
 
-              const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
+              const ReactDreamComponent = ReactDream(
+                ReferentiallyTransparentComponent
+              )
 
-              return ReactDreamComponent.contramap(x => x).Component.displayName
+              return ReactDreamComponent
+                .contramap(x => x)
+                .Component
+                .displayName
             },
             'Casablanca'
           )
