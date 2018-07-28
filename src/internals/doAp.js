@@ -1,2 +1,2 @@
 // doAp : (Component -> Component) -> ReactDream -> Component
-export default higherOrderComponent => DreamComponent => DreamComponent.fork(higherOrderComponent)
+export default higherOrderComponent => DreamComponent => higherOrderComponent(DreamComponent.Component)
