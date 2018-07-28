@@ -89,8 +89,9 @@ const defaultProps = Component => props => ReactDream(recomposeDefaultProps(prop
 // log : Component -> (Props -> String) -> IO ReactDream
 const log = Component => messageFromProps => ReactDream(withLog(messageFromProps)(Component))
 
-// name : Component -> String -> ReactDream
-const name = Component => compose(map(Component), setDisplayName)
+// name : ReactComponent a e -> String -> ReactDream (ReactComponent a e)
+const name = Component => name =>
+  ReactDream(setDisplayName(name)(Component))
 
 // removeProps : Component -> (...Array) -> ReactDream
 const removeProps = Component => (...propsToRemove) =>

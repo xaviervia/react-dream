@@ -163,4 +163,4 @@ washington([
   ...partialApplicationSuite,
   ...ReactDreamSuite,
   ...styleFromPropsSuite,
-].filter(({ description }) => /Functor: map:/.test(description)))
+])
