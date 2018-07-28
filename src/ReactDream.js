@@ -60,11 +60,15 @@ const contramap = Component => propsPreprocessor => {
   return ReactDream(Enhanced)
 }
 
-// doPromap : ((a -> Props), (Component -> Component)) -> Component -> Component
-// // promap : Component -> (a -> Props) -> (Component -> Component) -> ReactDream
-// const promap = Component => (propsPreprocessor, higherOrderComponent) =>
-//   ReactDream(doPromap(propsPreprocessor, higherOrderComponent)(Component))
-//  compose(doMap(higherOrderComponent), doContramap(propsPreprocessor))
+// promap : ReactComponent b e ->
+//          ((a -> b), (e -> f)) ->
+//          ReactDream (ReactComponent a f)
+const promap = Component => (preProcessor, postProcessor) =>
+  map(
+    contramap(Component)(preProcessor).Component
+  )(
+    postProcessor
+  )
 
 
 // CUSTOM HELPERS
@@ -137,7 +141,7 @@ const ReactDream = Component => ({
   concat: concat(Component),
   contramap: contramap(Component),
   map: map(Component),
-  // promap: promap(Component),
+  promap: promap(Component),
 
   // Custom helpers
   addProps: addProps(Component),

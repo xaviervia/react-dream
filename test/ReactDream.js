@@ -282,29 +282,20 @@ export default suite(
     ...suite(
       'promap',
       example(
-        'passes the Component through the higher-order Component and the props preprocessor',
+        'passes the Component through the post and pre processor',
 
         () => {
-          const propsPreprocessor = () => ({ name: 'Radiohead' })
-          const higherOrderComponent = Target => ({ name }) =>
-            <div>
-              <Target>
-                {name}
-              </Target>
-            </div>
+          const preProcessor = () => ({ name: 'Radiohead' })
+          const postProcessor = element => <main>{element}</main>
 
-          const Enhanced = ReactDream(props => <h1 {...props} />).promap(
-            propsPreprocessor,
-            higherOrderComponent
-          )
+          const Enhanced = ReactDream(props => <h1 {...props} />)
+            .promap(preProcessor, postProcessor)
 
-          const renderer = create(<Enhanced.Component />)
-
-          return renderer.toJSON()
+          return create(<Enhanced.Component />).toJSON()
         },
 
         {
-          type: 'div',
+          type: 'main',
           props: {},
           children: [
             {
