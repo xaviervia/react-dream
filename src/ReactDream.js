@@ -4,7 +4,6 @@ import recomposeDefaultProps from 'recompose/defaultProps'
 import setPropTypes from 'recompose/setPropTypes'
 import withDebugger from '@hocs/with-debugger'
 import withLog from '@hocs/with-log'
-import doAp from './internals/doAp'
 import doConcat from './internals/doConcat'
 import doContramap from './internals/doContramap'
 import doMap from './internals/doMap'
@@ -17,9 +16,9 @@ import styleFromProps from './styleFromProps'
 // ALGEBRAS
 // ////////////////////////////////////////////////////////////////////////// //
 
-// ap : higherOrderComponent -> ReactDream -> ReactDream
+// ap : (Component -> Component) -> ReactDream -> ReactDream
 const ap = higherOrderComponent => ReactDreamComponent =>
-  ReactDream(doAp(higherOrderComponent)(ReactDreamComponent))
+  ReactDream(ReactDreamComponent.fork(higherOrderComponent))
 
 // chain : Component -> (Component -> ReactDream) -> ReactDream
 const chain = Component => kleisliReactDreamComponent => kleisliReactDreamComponent(Component)
