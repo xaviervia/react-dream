@@ -4,8 +4,6 @@ export { default as createElementWithProps } from './createElementWithProps'
 
 export { default as styleFromProps } from './styleFromProps'
 
-export { default as withStyleFromProps } from './withStyleFromProps'
-
 export { default as addProps } from './partialApplication/addProps'
 export { default as ap } from './partialApplication/ap'
 export { default as chain } from './partialApplication/chain'
