@@ -6,7 +6,7 @@ import { example, suite } from '../dsl'
 export default suite(
   'doPromap',
   example(
-    'run the component through the higher-order component',
+    'run the component through the higher-order component and the pre processor',
 
     () => {
       const propsPreprocessor = () => ({ name: 'Radiohead' })
