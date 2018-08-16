@@ -5,7 +5,6 @@ export { default as createElementWithProps } from './createElementWithProps'
 export { default as styleFromProps } from './styleFromProps'
 
 export { default as addProps } from './partialApplication/addProps'
-export { default as ap } from './partialApplication/ap'
 export { default as chain } from './partialApplication/chain'
 export { default as concat } from './partialApplication/concat'
 export { default as contramap } from './partialApplication/contramap'

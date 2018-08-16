@@ -17,12 +17,6 @@ import styleFromProps from './styleFromProps'
 // ALGEBRAS
 // ////////////////////////////////////////////////////////////////////////// //
 
-// ap : (ReactComponent a e -> b) ->
-//      ReactDream (ReactComponent a e) ->
-//      ReactDream (b)
-const ap = higherOrderComponent => ReactDreamComponent =>
-  ReactDream(ReactDreamComponent.fork(higherOrderComponent))
-
 // chain : Component -> (Component -> ReactDream) -> ReactDream
 const chain = Component => kleisliReactDreamComponent =>
   kleisliReactDreamComponent(Component)
@@ -45,7 +39,7 @@ const concat = Component => ReactDreamComponent =>
 //       (ReactComponent e a -> ReactComponent e b) ->
 //       ReactDream (ReactComponent e b)
 const map = Component => postProcessor =>
-  ReactDream(props => postProcessor(<Component {...props} />))
+  ReactDream(x => postProcessor(Component(x)))
 
 // contramap : ReactComponent a e ->
 //             (a -> b) ->
@@ -136,7 +130,6 @@ const ReactDream = Component => ({
   Component,
 
   // Algebras
-  ap: ap(Component),
   chain: chain(Component),
   concat: concat(Component),
   contramap: contramap(Component),
@@ -157,9 +150,5 @@ const ReactDream = Component => ({
   style: style(Component),
   translate: translate(Component),
 })
-
-ReactDream.of = ReactDream
-
-export const of = ReactDream.of
 
 export default ReactDream

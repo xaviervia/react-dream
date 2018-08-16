@@ -4,7 +4,6 @@ import EntrypointReactDream, * as entrypoint from '../src'
 
 import DirectReactDream from '../src/ReactDream'
 import addProps from '../src/partialApplication/addProps'
-import ap from '../src/partialApplication/ap'
 import chain from '../src/partialApplication/chain'
 import concat from '../src/partialApplication/concat'
 import contramap from '../src/partialApplication/contramap'
@@ -37,12 +36,6 @@ const entrypointSuite = suite(
     'exposes addProps',
     () => addProps,
     entrypoint.addProps
-  ),
-
-  example(
-    'exposes ap',
-    () => ap,
-    entrypoint.ap
   ),
 
   example(

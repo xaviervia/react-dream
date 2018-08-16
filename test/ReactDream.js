@@ -53,43 +53,6 @@ export default suite(
   ),
 
   ...suite(
-    'Apply',
-    ...suite(
-      'ap',
-      example(
-        'passes the argument to the component',
-        () => {
-          const ReactDreamComponent = ReactDream(x => !x)
-
-          return ReactDreamComponent.ap(ReactDream(false)).Component
-        },
-        true
-      )
-    )
-  ),
-
-  ...suite(
-    'Applicative',
-    ...suite(
-      'ReactDream.of',
-      example(
-        'wraps the Component',
-        () => ReactDream.of(Target).Component,
-        Target
-      )
-    ),
-
-    ...suite(
-      'of - named export',
-      example(
-        'wraps the Component',
-        () => of(Target).Component,
-        Target
-      )
-    )
-  ),
-
-  ...suite(
     'Contravariant',
 
     ...suite(
