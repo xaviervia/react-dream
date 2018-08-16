@@ -22,6 +22,4 @@ export { default as scale } from './partialApplication/scale'
 export { default as style } from './partialApplication/style'
 export { default as translate } from './partialApplication/translate'
 
-export const of = ReactDream
-
 export default ReactDream

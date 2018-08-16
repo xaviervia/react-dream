@@ -133,12 +133,6 @@ const entrypointSuite = suite(
     () => translate,
     entrypoint.translate
   ),
-
-  example(
-    'exposes of',
-    () => DirectReactDream,
-    entrypoint.of
-  )
 )
 
 import createElementWithPropsSuite from './createElementWithProps'

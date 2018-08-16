@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { create } from 'react-test-renderer'
-import ReactDream, { of } from '../src/ReactDream'
+import ReactDream from '../src/ReactDream'
 import { example, suite } from './dsl'
 
 const Target = x => x
