@@ -12,7 +12,6 @@ import isReferentiallyTransparentFunctionComponent from './isReferentiallyTransp
 import getRotateStyle from './helpers/getRotateStyle'
 import getScaleStyle from './helpers/getScaleStyle'
 import getTranslateStyle from './helpers/getTranslateStyle'
-import styleFromProps from './styleFromProps'
 
 // ALGEBRAS
 // ////////////////////////////////////////////////////////////////////////// //
@@ -120,7 +119,14 @@ const scale = Component => getScaleFromProps =>
 
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
-  contramap(Component)(styleFromProps(getStyleFromProps))
+  contramap(Component)(props => ({
+    ...props,
+    style: {
+      ...getStyleFromProps(props),
+      ...(props.style || {}),
+    },
+  }))
+
 
 // TYPE
 // ////////////////////////////////////////////////////////////////////////// //

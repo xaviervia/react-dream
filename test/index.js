@@ -138,7 +138,6 @@ const entrypointSuite = suite(
 import createElementWithPropsSuite from './createElementWithProps'
 import partialApplicationSuite from './partialApplication'
 import ReactDreamSuite from './ReactDream'
-import styleFromPropsSuite from './styleFromProps'
 
 import jsDomGlobal from 'jsdom-global'
 
@@ -149,5 +148,4 @@ washington([
   ...createElementWithPropsSuite,
   ...partialApplicationSuite,
   ...ReactDreamSuite,
-  ...styleFromPropsSuite,
 ])

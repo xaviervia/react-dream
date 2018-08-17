@@ -2,8 +2,6 @@ import ReactDream from './ReactDream'
 
 export { default as createElementWithProps } from './createElementWithProps'
 
-export { default as styleFromProps } from './styleFromProps'
-
 export { default as addProps } from './partialApplication/addProps'
 export { default as chain } from './partialApplication/chain'
 export { default as concat } from './partialApplication/concat'
