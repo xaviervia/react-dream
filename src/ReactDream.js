@@ -40,6 +40,12 @@ const concat = Component => ReactDreamComponent =>
 const map = Component => postProcessor =>
   ReactDream(x => postProcessor(Component(x)))
 
+// statelessContramap : ReactComponent a e ->
+//             (a -> b) ->
+//             ReactDream (ReactComponent b e)
+const statelessContramap = Component => propsPreprocessor => 
+    Stateless(compose(Component, propsPreprocessor))
+
 // contramap : ReactComponent a e ->
 //             (a -> b) ->
 //             ReactDream (ReactComponent b e)
@@ -131,8 +137,34 @@ const style = Component => getStyleFromProps =>
 // TYPE
 // ////////////////////////////////////////////////////////////////////////// //
 
-// ReactDream : Component -> ReactDream
-const ReactDream = Component => ({
+// Stateless : Component -> ReactDream
+const Stateless = Component => ({
+  Component,
+
+  // Algebras
+  chain: chain(Component),
+  concat: concat(Component),
+  contramap: statelessContramap(Component),
+  map: map(Component),
+  promap: promap(Component),
+
+  // Custom helpers
+  addProps: addProps(Component),
+  debug: debug(Component),
+  defaultProps: defaultProps(Component),
+  fork: fork(Component),
+  name: name(Component),
+  log: log(Component),
+  propTypes: propTypes(Component),
+  removeProps: removeProps(Component),
+  rotate: rotate(Component),
+  scale: scale(Component),
+  style: style(Component),
+  translate: translate(Component),
+})
+
+// Stateful : Component -> ReactDream
+const Stateful = Component => ({
   Component,
 
   // Algebras
@@ -156,5 +188,14 @@ const ReactDream = Component => ({
   style: style(Component),
   translate: translate(Component),
 })
+
+// LIFTER
+// /////////////////////////////////////////////////////////////////////////////////// //
+
+// ReactDream : Component -> ReactDream
+const ReactDream = Component =>
+  isReferentiallyTransparentFunctionComponent(Component)
+    ? Stateless(Component)
+    : Stateful(Component)
 
 export default ReactDream

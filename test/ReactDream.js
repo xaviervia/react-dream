@@ -73,48 +73,7 @@ export default suite(
           },
           false
         ),
-
-        ...suite(
-          'it has name',
-          example(
-            'preserves the name as displayName',
-            () => {
-              function ReferentiallyTransparentComponent(x) {
-                return x
-              }
-
-              const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
-
-              return ReactDreamComponent
-                .contramap(x => x)
-                .Component
-                .displayName
-            },
-            'ReferentiallyTransparentComponent'
-          )
         ),
-
-        ...suite(
-          'it has displayName',
-          example(
-            'preserves it',
-            () => {
-              const ReferentiallyTransparentComponent = x => x
-              ReferentiallyTransparentComponent.displayName = 'Casablanca'
-
-              const ReactDreamComponent = ReactDream(
-                ReferentiallyTransparentComponent
-              )
-
-              return ReactDreamComponent
-                .contramap(x => x)
-                .Component
-                .displayName
-            },
-            'Casablanca'
-          )
-        )
-      ),
 
       ...suite(
         'is not referentially transparent',
