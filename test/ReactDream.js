@@ -18,7 +18,16 @@ export default suite(
   
       Target
     ),
+
+    example(
+      'Provides access to the type representative via .constructor',
+  
+      () => Stateless(Target).constructor,
+  
+      ReactDream
+    ),
   ),
+
   ...suite(
     'Stateful',
 
@@ -29,7 +38,16 @@ export default suite(
   
       Target
     ),
+
+    example(
+      'Provides access to the type representative via .constructor',
+  
+      () => Stateful(Target).constructor,
+  
+      ReactDream
+    ),
   ),
+
   ...suite(
     'Entrypoint',
 
@@ -39,6 +57,25 @@ export default suite(
       () => ReactDream(Target).Component,
   
       Target
+    ),
+
+    example(
+      'Builds a Stateless when referentially transparent',
+
+      () => ReactDream(() => <div />).match({ Stateless: () => true }),
+
+      true
+    ),
+
+    example(
+      'Builds a Stateful when class component',
+
+      () => ReactDream(
+        class extends Component { render () { return <div /> } }
+      )
+        .match({ Stateful: () => true }),
+
+      true
     ),
   ),
 

@@ -1,4 +1,4 @@
-import ReactDream from './ReactDream'
+import ReactDream, { Stateless as _Stateless, Stateful as _Stateful } from './ReactDream'
 
 export { default as createElementWithProps } from './createElementWithProps'
 
@@ -20,4 +20,6 @@ export { default as scale } from './partialApplication/scale'
 export { default as style } from './partialApplication/style'
 export { default as translate } from './partialApplication/translate'
 
+export const Stateless = _Stateless
+export const Stateful = _Stateful
 export default ReactDream

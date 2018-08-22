@@ -151,6 +151,13 @@ export const Stateless = Component => ({
   map: map(Component),
   promap: statelessPromap(Component),
 
+  // Type
+  constructor: ReactDream,
+  match: ({ Stateless, _ }) =>
+    Stateless !== undefined
+      ? Stateless(Component)
+      : _(),
+
   // Custom helpers
   addProps: addProps(Component),
   debug: debug(Component),
@@ -176,6 +183,13 @@ export const Stateful = Component => ({
   contramap: statefulContramap(Component),
   map: map(Component),
   promap: promap(Component),
+
+  // Type
+  constructor: ReactDream,
+  match: ({ Stateful, _ }) =>
+    Stateful !== undefined
+      ? Stateful(Component)
+      : _(),
 
   // Custom helpers
   addProps: addProps(Component),

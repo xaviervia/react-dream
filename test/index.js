@@ -2,7 +2,10 @@ import washington, { example, suite } from 'washington'
 
 import EntrypointReactDream, * as entrypoint from '../src'
 
-import DirectReactDream from '../src/ReactDream'
+import DirectReactDream, {
+  Stateless as DirectStateless,
+  Stateful as DirectStateful
+} from '../src/ReactDream'
 import addProps from '../src/partialApplication/addProps'
 import chain from '../src/partialApplication/chain'
 import concat from '../src/partialApplication/concat'
@@ -29,6 +32,18 @@ const entrypointSuite = suite(
     'exposes ReactDream',
     () => DirectReactDream,
     EntrypointReactDream
+  ),
+
+  example(
+    'exposes Stateless',
+    () => DirectStateless,
+    entrypoint.Stateless
+  ),
+
+  example(
+    'exposes Stateful',
+    () => DirectStateful,
+    entrypoint.Stateful
   ),
 
   example(
