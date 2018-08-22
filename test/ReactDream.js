@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { create } from 'react-test-renderer'
-import ReactDream from '../src/ReactDream'
+import ReactDream, { Stateless, Stateful } from '../src/ReactDream'
 import { example, suite } from './dsl'
 
 const Target = x => x
@@ -8,12 +8,38 @@ const Target = x => x
 export default suite(
   'ReactDream',
 
-  example(
-    'wraps the Component',
+  ...suite(
+    'Stateless',
 
-    () => ReactDream(Target).Component,
+    example(
+      'Provides access to the component via .Component',
+  
+      () => Stateless(Target).Component,
+  
+      Target
+    ),
+  ),
+  ...suite(
+    'Stateful',
 
-    Target
+    example(
+      'Provides access to the component via .Component',
+  
+      () => Stateful(Target).Component,
+  
+      Target
+    ),
+  ),
+  ...suite(
+    'Entrypoint',
+
+    example(
+      'Provides access to the component via .Component',
+  
+      () => ReactDream(Target).Component,
+  
+      Target
+    ),
   ),
 
   ...suite(

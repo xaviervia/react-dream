@@ -141,7 +141,7 @@ const style = Component => getStyleFromProps =>
 // ////////////////////////////////////////////////////////////////////////// //
 
 // Stateless : Component -> ReactDream
-const Stateless = Component => ({
+export const Stateless = Component => ({
   Component,
 
   // Algebras
@@ -167,7 +167,7 @@ const Stateless = Component => ({
 })
 
 // Stateful : Component -> ReactDream
-const Stateful = Component => ({
+export const Stateful = Component => ({
   Component,
 
   // Algebras
