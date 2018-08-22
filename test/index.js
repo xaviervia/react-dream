@@ -1,4 +1,4 @@
-import washington from 'washington'
+import washington, { example, suite } from 'washington'
 
 import EntrypointReactDream, * as entrypoint from '../src'
 
@@ -21,7 +21,6 @@ import scale from '../src/partialApplication/scale'
 import style from '../src/partialApplication/style'
 import translate from '../src/partialApplication/translate'
 
-import { example, suite } from './dsl'
 
 const entrypointSuite = suite(
   'entrypoint',

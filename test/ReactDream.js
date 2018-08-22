@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { create } from 'react-test-renderer'
 import ReactDream, { Stateless, Stateful } from '../src/ReactDream'
-import { example, suite } from './dsl'
+import { example, suite } from 'washington'
 
 const Target = x => x
 

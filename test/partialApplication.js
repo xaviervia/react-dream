@@ -1,4 +1,4 @@
-import { example, suite } from './dsl'
+import { example, suite } from 'washington'
 import addProps from '../src/partialApplication/addProps'
 import chain from '../src/partialApplication/chain'
 import concat from '../src/partialApplication/concat'
