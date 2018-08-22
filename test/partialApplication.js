@@ -1,6 +1,5 @@
-import { example, suite } from './dsl'
+import { example, suite } from 'washington'
 import addProps from '../src/partialApplication/addProps'
-import ap from '../src/partialApplication/ap'
 import chain from '../src/partialApplication/chain'
 import concat from '../src/partialApplication/concat'
 import contramap from '../src/partialApplication/contramap'
@@ -23,7 +22,6 @@ export default suite(
 
   ...[
     ['addProps', addProps],
-    ['ap', ap],
     ['chain', chain],
     ['concat', concat],
     ['contramap', contramap],

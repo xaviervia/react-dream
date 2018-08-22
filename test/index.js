@@ -1,10 +1,12 @@
-import washington from 'washington'
+import washington, { example, suite } from 'washington'
 
 import EntrypointReactDream, * as entrypoint from '../src'
 
-import DirectReactDream from '../src/ReactDream'
+import DirectReactDream, {
+  Stateless as DirectStateless,
+  Stateful as DirectStateful
+} from '../src/ReactDream'
 import addProps from '../src/partialApplication/addProps'
-import ap from '../src/partialApplication/ap'
 import chain from '../src/partialApplication/chain'
 import concat from '../src/partialApplication/concat'
 import contramap from '../src/partialApplication/contramap'
@@ -22,7 +24,6 @@ import scale from '../src/partialApplication/scale'
 import style from '../src/partialApplication/style'
 import translate from '../src/partialApplication/translate'
 
-import { example, suite } from './dsl'
 
 const entrypointSuite = suite(
   'entrypoint',
@@ -34,15 +35,21 @@ const entrypointSuite = suite(
   ),
 
   example(
-    'exposes addProps',
-    () => addProps,
-    entrypoint.addProps
+    'exposes Stateless',
+    () => DirectStateless,
+    entrypoint.Stateless
   ),
 
   example(
-    'exposes ap',
-    () => ap,
-    entrypoint.ap
+    'exposes Stateful',
+    () => DirectStateful,
+    entrypoint.Stateful
+  ),
+
+  example(
+    'exposes addProps',
+    () => addProps,
+    entrypoint.addProps
   ),
 
   example(
@@ -140,29 +147,21 @@ const entrypointSuite = suite(
     () => translate,
     entrypoint.translate
   ),
-
-  example(
-    'exposes of',
-    () => DirectReactDream,
-    entrypoint.of
-  )
 )
 
 import createElementWithPropsSuite from './createElementWithProps'
-import internalsSuite from './internals'
 import partialApplicationSuite from './partialApplication'
 import ReactDreamSuite from './ReactDream'
-import styleFromPropsSuite from './styleFromProps'
 
 import jsDomGlobal from 'jsdom-global'
 
 jsDomGlobal()
 
+const filter = ({ description }) => !/style|removeProps|rotate|scale|translate|addProps/.test(description)
+
 washington([
   ...entrypointSuite,
   ...createElementWithPropsSuite,
-  ...internalsSuite,
   ...partialApplicationSuite,
-  ...ReactDreamSuite,
-  ...styleFromPropsSuite,
+  ...ReactDreamSuite.filter(filter),
 ])

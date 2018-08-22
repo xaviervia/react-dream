@@ -1,19 +1,82 @@
 import React, { Component } from 'react'
 import { create } from 'react-test-renderer'
-import ReactDream, { of } from '../src/ReactDream'
-import { example, suite } from './dsl'
+import ReactDream, { Stateless, Stateful } from '../src/ReactDream'
+import { example, suite } from 'washington'
 
 const Target = x => x
 
 export default suite(
   'ReactDream',
 
-  example(
-    'wraps the Component',
+  ...suite(
+    'Stateless',
 
-    () => ReactDream(Target).Component,
+    example(
+      'Provides access to the component via .Component',
+  
+      () => Stateless(Target).Component,
+  
+      Target
+    ),
 
-    Target
+    example(
+      'Provides access to the type representative via .constructor',
+  
+      () => Stateless(Target).constructor,
+  
+      ReactDream
+    ),
+  ),
+
+  ...suite(
+    'Stateful',
+
+    example(
+      'Provides access to the component via .Component',
+  
+      () => Stateful(Target).Component,
+  
+      Target
+    ),
+
+    example(
+      'Provides access to the type representative via .constructor',
+  
+      () => Stateful(Target).constructor,
+  
+      ReactDream
+    ),
+  ),
+
+  ...suite(
+    'Entrypoint',
+
+    example(
+      'Provides access to the component via .Component',
+  
+      () => ReactDream(Target).Component,
+  
+      Target
+    ),
+
+    example(
+      'Builds a Stateless when referentially transparent',
+
+      () => ReactDream(() => <div />).match({ Stateless: () => true }),
+
+      true
+    ),
+
+    example(
+      'Builds a Stateful when class component',
+
+      () => ReactDream(
+        class extends Component { render () { return <div /> } }
+      )
+        .match({ Stateful: () => true }),
+
+      true
+    ),
   ),
 
   ...suite(
@@ -23,54 +86,31 @@ export default suite(
       'map',
 
       example(
-        'runs the Component through the HoC and puts it back in a ReactDream',
+        'passes the resulting element through the function',
 
         () => {
-          const Component = 1
-          const higherOrderComponent = x => x + 1
-          const EnhancedReactDreamComponent = ReactDream(Component).map(higherOrderComponent)
+          const Component = () => <h1>Hello</h1>
+          const elementProcessor = element => <h2>{element}</h2>
+          const EnhancedReactDreamComponent = ReactDream(Component)
+            .map(elementProcessor)
 
-          return EnhancedReactDreamComponent.Component
+          return create(<EnhancedReactDreamComponent.Component />)
+            .toJSON()
         },
 
-        2
-      )
-    )
-  ),
-
-  ...suite(
-    'Apply',
-    ...suite(
-      'ap',
-      example(
-        'passes the argument to the component',
-        () => {
-          const ReactDreamComponent = ReactDream(x => !x)
-
-          return ReactDreamComponent.ap(ReactDream(false)).Component
-        },
-        true
-      )
-    )
-  ),
-
-  ...suite(
-    'Applicative',
-    ...suite(
-      'ReactDream.of',
-      example(
-        'wraps the Component',
-        () => ReactDream.of(Target).Component,
-        Target
-      )
-    ),
-
-    ...suite(
-      'of - named export',
-      example(
-        'wraps the Component',
-        () => of(Target).Component,
-        Target
+        {
+          type: 'h2',
+          props: {},
+          children: [
+            {
+              type: 'h1',
+              props: {},
+              children: [
+                'Hello'
+              ]
+            }
+          ]
+        }
       )
     )
   ),
@@ -88,45 +128,14 @@ export default suite(
           () => {
             const ReferentiallyTransparentComponent = x => !x
             const propsPreprocessor = () => true
-            const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
+            const ReactDreamComponent = ReactDream(
+              ReferentiallyTransparentComponent
+            )
 
             return ReactDreamComponent.contramap(propsPreprocessor).Component()
           },
           false
         ),
-
-        ...suite(
-          'it has name',
-          example(
-            'preserves the name as displayName',
-            () => {
-              function ReferentiallyTransparentComponent(x) {
-                return x
-              }
-
-              const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
-
-              return ReactDreamComponent.contramap(x => x).Component.displayName
-            },
-            'ReferentiallyTransparentComponent'
-          )
-        ),
-
-        ...suite(
-          'it has displayName',
-          example(
-            'preserves it',
-            () => {
-              const ReferentiallyTransparentComponent = x => x
-              ReferentiallyTransparentComponent.displayName = 'Casablanca'
-
-              const ReactDreamComponent = ReactDream(ReferentiallyTransparentComponent)
-
-              return ReactDreamComponent.contramap(x => x).Component.displayName
-            },
-            'Casablanca'
-          )
-        )
       ),
 
       ...suite(
@@ -165,74 +174,6 @@ export default suite(
           [ 'Regina Spektor' ]
         ),
 
-        ...suite(
-          'it has name',
-          example(
-            'preserves the name as displayName',
-
-            () => {
-              class NotReferentiallyTransparent extends Component {
-                constructor() {
-                  super()
-
-                  this.state = {}
-                }
-
-                render() {
-                  return (
-                    <div>
-                      {this.props.name}
-                    </div>
-                  )
-                }
-              }
-
-              const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
-
-              const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
-
-              const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
-
-              return Enhanced.Component.displayName
-            },
-            'NotReferentiallyTransparent'
-          )
-        ),
-
-        ...suite(
-          'it has displayName',
-          example(
-            'preserves it',
-            () => {
-              class NotReferentiallyTransparent extends Component {
-                constructor() {
-                  super()
-
-                  this.state = {}
-                }
-
-                render() {
-                  return (
-                    <div>
-                      {this.props.name}
-                    </div>
-                  )
-                }
-              }
-
-              NotReferentiallyTransparent.displayName = 'BeginToHope'
-
-              const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
-
-              const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
-
-              const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
-
-              return Enhanced.Component.displayName
-            },
-            'BeginToHope'
-          )
-        )
       )
     )
   ),
@@ -258,29 +199,20 @@ export default suite(
     ...suite(
       'promap',
       example(
-        'passes the Component through the higher-order Component and the props preprocessor',
+        'passes the Component through the post and pre processor',
 
         () => {
-          const propsPreprocessor = () => ({ name: 'Radiohead' })
-          const higherOrderComponent = Target => ({ name }) =>
-            <div>
-              <Target>
-                {name}
-              </Target>
-            </div>
+          const preProcessor = () => ({ name: 'Radiohead' })
+          const postProcessor = element => <main>{element}</main>
 
-          const Enhanced = ReactDream(props => <h1 {...props} />).promap(
-            propsPreprocessor,
-            higherOrderComponent
-          )
+          const Enhanced = ReactDream(props => <h1 {...props} />)
+            .promap(preProcessor, postProcessor)
 
-          const renderer = create(<Enhanced.Component />)
-
-          return renderer.toJSON()
+          return create(<Enhanced.Component />).toJSON()
         },
 
         {
-          type: 'div',
+          type: 'main',
           props: {},
           children: [
             {
@@ -303,13 +235,17 @@ export default suite(
       example(
         'combines two Components so that they return an array of elements',
         () => {
-          const Concatenation = ReactDream(({ x }) => x).concat(ReactDream(({ y }) => y))
+          const Concatenation = ReactDream(({ x }) => <hr id={x} />)
+            .concat(ReactDream(({ y }) => <br id={y} />))
 
           const renderer = create(<Concatenation.Component x={1} y={2} />)
 
           return renderer.toJSON()
         },
-        [1, 2]
+        [
+          { type: 'hr', props: { id: 1 }, children: null },
+          { type: 'br', props: { id: 2 }, children: null }
+        ]
       )
     )
   ),

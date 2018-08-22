@@ -2,7 +2,7 @@ import React from 'react'
 import { create } from 'react-test-renderer'
 import { pick } from 'ramda'
 import createElementWithProps from '../src/createElementWithProps'
-import { suite, example } from './dsl'
+import { suite, example } from 'washington'
 
 
 export default suite(

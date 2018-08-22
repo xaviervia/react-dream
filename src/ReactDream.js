@@ -1,43 +1,77 @@
+import React, { Fragment } from 'react'
 import compose from 'recompose/compose'
+import getDisplayName from 'recompose/getDisplayName'
 import setDisplayName from 'recompose/setDisplayName'
 import recomposeDefaultProps from 'recompose/defaultProps'
 import setPropTypes from 'recompose/setPropTypes'
 import withDebugger from '@hocs/with-debugger'
 import withLog from '@hocs/with-log'
-import doAp from './internals/doAp'
-import doConcat from './internals/doConcat'
-import doContramap from './internals/doContramap'
-import doMap from './internals/doMap'
-import doPromap from './internals/doPromap'
-import doRotate from './internals/doRotate'
-import doTranslate from './internals/doTranslate'
-import doScale from './internals/doScale'
-import styleFromProps from './styleFromProps'
+
+import isReferentiallyTransparentFunctionComponent from './isReferentiallyTransparentFunctionComponent'
+
+import getRotateStyle from './helpers/getRotateStyle'
+import getScaleStyle from './helpers/getScaleStyle'
+import getTranslateStyle from './helpers/getTranslateStyle'
 
 // ALGEBRAS
 // ////////////////////////////////////////////////////////////////////////// //
 
-// ap : higherOrderComponent -> ReactDream -> ReactDream
-const ap = higherOrderComponent => ReactDreamComponent =>
-  ReactDream(doAp(higherOrderComponent)(ReactDreamComponent))
-
 // chain : Component -> (Component -> ReactDream) -> ReactDream
-const chain = Component => kleisliReactDreamComponent => kleisliReactDreamComponent(Component)
+const chain = Component => kleisliReactDreamComponent =>
+  kleisliReactDreamComponent(Component)
 
-// map : Component -> (Component -> Component) -> ReactDream
-const map = Component => higherOrderComponent => ReactDream(doMap(higherOrderComponent)(Component))
+// concat : ReactComponent a e ->
+//          ReactComponent b f ->
+//          ReactDream (ReactComponent c g)
+const concat = Component => ReactDreamComponent =>
+  ReactDream(
+    setDisplayName(
+      getDisplayName(Component)
+        .concat(getDisplayName(ReactDreamComponent.CompComponent))
+    )(props => <Fragment>
+      <Component {...props} />
+      <ReactDreamComponent.Component {...props} />
+    </Fragment>)
+  )
 
-// concat : Component -> Component -> ReactDream
-const concat = Component => OtherComponent =>
-  ReactDream(doConcat(OtherComponent.Component)(Component))
+// map : ReactComponent e a ->
+//       (ReactComponent e a -> ReactComponent e b) ->
+//       ReactDream (ReactComponent e b)
+const map = Component => postProcessor =>
+  ReactDream(x => postProcessor(Component(x)))
 
-// contramap : Component -> (a -> Props) -> ReactDream
-const contramap = Component => propsPreprocessor =>
-  ReactDream(doContramap(propsPreprocessor)(Component))
+// statelessContramap : ReactComponent a e ->
+//             (a -> b) ->
+//             ReactDream (ReactComponent b e)
+const statelessContramap = Component => propsPreprocessor => 
+    Stateless(compose(Component, propsPreprocessor))
 
-// promap : Component -> (a -> Props) -> (Component -> Component) -> ReactDream
-const promap = Component => (propsPreprocessor, higherOrderComponent) =>
-  ReactDream(doPromap(propsPreprocessor, higherOrderComponent)(Component))
+// statefulContramap : ReactComponent a e ->
+//             (a -> b) ->
+//             ReactDream (ReactComponent b e)
+const statefulContramap = Component => propsPreprocessor => 
+    Stateful(props => <Component {...propsPreprocessor(props)} />)
+
+// statelessPromap : ReactComponent b e ->
+//          ((a -> b), (e -> f)) ->
+//          ReactDream (ReactComponent a f)
+const statelessPromap = Component => (preProcessor, postProcessor) =>
+  map(
+    statelessContramap(Component)(preProcessor).Component
+  )(
+    postProcessor
+  )
+
+// promap : ReactComponent b e ->
+//          ((a -> b), (e -> f)) ->
+//          ReactDream (ReactComponent a f)
+const promap = Component => (preProcessor, postProcessor) =>
+  map(
+    contramap(Component)(preProcessor).Component
+  )(
+    postProcessor
+  )
+
 
 // CUSTOM HELPERS
 // ////////////////////////////////////////////////////////////////////////// //
@@ -61,8 +95,9 @@ const defaultProps = Component => props => ReactDream(recomposeDefaultProps(prop
 // log : Component -> (Props -> String) -> IO ReactDream
 const log = Component => messageFromProps => ReactDream(withLog(messageFromProps)(Component))
 
-// name : Component -> String -> ReactDream
-const name = Component => compose(map(Component), setDisplayName)
+// name : ReactComponent a e -> String -> ReactDream (ReactComponent a e)
+const name = Component => name =>
+  ReactDream(setDisplayName(name)(Component))
 
 // removeProps : Component -> (...Array) -> ReactDream
 const removeProps = Component => (...propsToRemove) =>
@@ -76,37 +111,52 @@ const removeProps = Component => (...propsToRemove) =>
   })
 
 // propTypes : Component -> (PropTypes) -> ReactDream
-const propTypes = Component => propTypesToSet => ReactDream(setPropTypes(propTypesToSet)(Component))
+const propTypes = Component => propTypesToSet =>
+  ReactDream(setPropTypes(propTypesToSet)(Component))
 
 // translate : Component -> (Props -> [Number]) -> ReactDream
 const translate = Component => getTranslateFromProps =>
-  ReactDream(doTranslate(getTranslateFromProps)(Component))
+  contramap(Component)(getTranslateStyle(getTranslateFromProps))
 
 // rotate : Component -> (Props -> Number) -> ReactDream
 const rotate = Component => getRotateFromProps =>
-  ReactDream(doRotate(getRotateFromProps)(Component))
+  contramap(Component)(getRotateStyle(getRotateFromProps))
 
 // scale : Component -> (Props -> Number) -> ReactDream
-const scale = Component => getScaleFromProps => ReactDream(doScale(getScaleFromProps)(Component))
+const scale = Component => getScaleFromProps =>
+  contramap(Component)(getScaleStyle(getScaleFromProps))
 
 // style : Component -> (Props -> Style) -> ReactDream
 const style = Component => getStyleFromProps =>
-  contramap(Component)(styleFromProps(getStyleFromProps))
+  contramap(Component)(props => ({
+    ...props,
+    style: {
+      ...getStyleFromProps(props),
+      ...(props.style || {}),
+    },
+  }))
+
 
 // TYPE
 // ////////////////////////////////////////////////////////////////////////// //
 
-// ReactDream : Component -> ReactDream
-const ReactDream = Component => ({
+// Stateless : Component -> ReactDream
+export const Stateless = Component => ({
   Component,
 
   // Algebras
-  ap: ap(Component),
   chain: chain(Component),
   concat: concat(Component),
-  contramap: contramap(Component),
+  contramap: statelessContramap(Component),
   map: map(Component),
-  promap: promap(Component),
+  promap: statelessPromap(Component),
+
+  // Type
+  constructor: ReactDream,
+  match: ({ Stateless, _ }) =>
+    Stateless !== undefined
+      ? Stateless(Component)
+      : _(),
 
   // Custom helpers
   addProps: addProps(Component),
@@ -123,8 +173,46 @@ const ReactDream = Component => ({
   translate: translate(Component),
 })
 
-ReactDream.of = ReactDream
+// Stateful : Component -> ReactDream
+export const Stateful = Component => ({
+  Component,
 
-export const of = ReactDream.of
+  // Algebras
+  chain: chain(Component),
+  concat: concat(Component),
+  contramap: statefulContramap(Component),
+  map: map(Component),
+  promap: promap(Component),
+
+  // Type
+  constructor: ReactDream,
+  match: ({ Stateful, _ }) =>
+    Stateful !== undefined
+      ? Stateful(Component)
+      : _(),
+
+  // Custom helpers
+  addProps: addProps(Component),
+  debug: debug(Component),
+  defaultProps: defaultProps(Component),
+  fork: fork(Component),
+  name: name(Component),
+  log: log(Component),
+  propTypes: propTypes(Component),
+  removeProps: removeProps(Component),
+  rotate: rotate(Component),
+  scale: scale(Component),
+  style: style(Component),
+  translate: translate(Component),
+})
+
+// LIFTER
+// /////////////////////////////////////////////////////////////////////////////////// //
+
+// ReactDream : Component -> ReactDream
+const ReactDream = Component =>
+  isReferentiallyTransparentFunctionComponent(Component)
+    ? Stateless(Component)
+    : Stateful(Component)
 
 export default ReactDream
