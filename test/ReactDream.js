@@ -73,7 +73,7 @@ export default suite(
           },
           false
         ),
-        ),
+      ),
 
       ...suite(
         'is not referentially transparent',
@@ -111,74 +111,6 @@ export default suite(
           [ 'Regina Spektor' ]
         ),
 
-        ...suite(
-          'it has name',
-          example(
-            'preserves the name as displayName',
-
-            () => {
-              class NotReferentiallyTransparent extends Component {
-                constructor() {
-                  super()
-
-                  this.state = {}
-                }
-
-                render() {
-                  return (
-                    <div>
-                      {this.props.name}
-                    </div>
-                  )
-                }
-              }
-
-              const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
-
-              const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
-
-              const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
-
-              return Enhanced.Component.displayName
-            },
-            'NotReferentiallyTransparent'
-          )
-        ),
-
-        ...suite(
-          'it has displayName',
-          example(
-            'preserves it',
-            () => {
-              class NotReferentiallyTransparent extends Component {
-                constructor() {
-                  super()
-
-                  this.state = {}
-                }
-
-                render() {
-                  return (
-                    <div>
-                      {this.props.name}
-                    </div>
-                  )
-                }
-              }
-
-              NotReferentiallyTransparent.displayName = 'BeginToHope'
-
-              const propsPreprocesssor = () => ({ name: 'Regina Spektor' })
-
-              const ReactDreamComponent = ReactDream(NotReferentiallyTransparent)
-
-              const Enhanced = ReactDreamComponent.contramap(propsPreprocesssor)
-
-              return Enhanced.Component.displayName
-            },
-            'BeginToHope'
-          )
-        )
       )
     )
   ),

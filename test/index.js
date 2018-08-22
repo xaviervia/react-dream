@@ -143,9 +143,11 @@ import jsDomGlobal from 'jsdom-global'
 
 jsDomGlobal()
 
+const filter = ({ description }) => !/style|removeProps|rotate|scale|translate|addProps/.test(description)
+
 washington([
   ...entrypointSuite,
   ...createElementWithPropsSuite,
   ...partialApplicationSuite,
-  ...ReactDreamSuite,
+  ...ReactDreamSuite.filter(filter),
 ])

@@ -46,18 +46,21 @@ const map = Component => postProcessor =>
 const statelessContramap = Component => propsPreprocessor => 
     Stateless(compose(Component, propsPreprocessor))
 
-// contramap : ReactComponent a e ->
+// statefulContramap : ReactComponent a e ->
 //             (a -> b) ->
 //             ReactDream (ReactComponent b e)
-const contramap = Component => propsPreprocessor => {
-  const Enhanced = isReferentiallyTransparentFunctionComponent(Component)
-    ? compose(Component, propsPreprocessor)
-    : props => <Component {...propsPreprocessor(props)} />
+const statefulContramap = Component => propsPreprocessor => 
+    Stateful(props => <Component {...propsPreprocessor(props)} />)
 
-  Enhanced.displayName = getDisplayName(Component)
-
-  return ReactDream(Enhanced)
-}
+// statelessPromap : ReactComponent b e ->
+//          ((a -> b), (e -> f)) ->
+//          ReactDream (ReactComponent a f)
+const statelessPromap = Component => (preProcessor, postProcessor) =>
+  map(
+    statelessContramap(Component)(preProcessor).Component
+  )(
+    postProcessor
+  )
 
 // promap : ReactComponent b e ->
 //          ((a -> b), (e -> f)) ->
@@ -146,7 +149,7 @@ const Stateless = Component => ({
   concat: concat(Component),
   contramap: statelessContramap(Component),
   map: map(Component),
-  promap: promap(Component),
+  promap: statelessPromap(Component),
 
   // Custom helpers
   addProps: addProps(Component),
@@ -170,7 +173,7 @@ const Stateful = Component => ({
   // Algebras
   chain: chain(Component),
   concat: concat(Component),
-  contramap: contramap(Component),
+  contramap: statefulContramap(Component),
   map: map(Component),
   promap: promap(Component),
 
