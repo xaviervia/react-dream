@@ -1,6 +1,6 @@
 {
   "name": "@brettm12345/react-dream",
-  "version": "0.5.5",
+  "version": "0.5.7",
   "description": "Fantasy Land type for React Components",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,15 +41,14 @@
     "jsdom": "^11.12.0",
     "jsdom-global": "^3.0.2",
     "prettier": "^1.19.1",
-    "ramda": "^0.25.0",
     "react": "^16.0.0",
     "react-test-renderer": "^16.0.0",
-    "recompose": "^0.24.0",
+    "recompose": "^0.30.0",
     "washington": "^2.0.0-rc.3"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
-    "recompose": "^0.24.0"
+    "react": "^16.12.0",
+    "recompose": "^0.30.0"
   },
   "dependencies": {
     "@hocs/with-debugger": "^0.1.0",
