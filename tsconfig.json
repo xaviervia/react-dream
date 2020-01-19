@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "checkJs": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "outDir": "./dist",
+    "jsx": "preserve",
+    "lib": ["dom", "es2015", "es2017"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "paths": {
+      "src/*": ["src/*"],
+      "@hocs/with-debugger": ["src/@types/@hocs__with-debugger"],
+      "@hocs/with-log": ["src/@types/@hocs__with-log"]
+    },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "esnext",
+    "typeRoots": ["./src/@types", "./node_modules/@types"]
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
+}
