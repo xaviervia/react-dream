@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "checkJs": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "outDir": "./dist",
+    "jsx": "react",
+    "lib": ["dom", "es2015", "ESNext"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "paths": {
+      "src/*": ["src/*"],
+      "@hocs/with-debugger": ["src/@types/@hocs__with-debugger"],
+      "@hocs/with-log": ["src/@types/@hocs__with-log"]
+    },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "es5",
+    "typeRoots": ["./src/@types", "./node_modules/@types"]
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}
