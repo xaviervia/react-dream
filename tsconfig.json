@@ -9,9 +9,9 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "outDir": "./dist",
-    "jsx": "preserve",
-    "lib": ["dom", "es2015", "es2017"],
-    "module": "esnext",
+    "jsx": "react",
+    "lib": ["dom", "es2015", "ESNext"],
+    "module": "CommonJS",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "paths": {
@@ -23,14 +23,13 @@
     "noUnusedParameters": true,
     "preserveConstEnums": true,
     "removeComments": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": true,
-    "target": "esnext",
+    "target": "es5",
     "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
-  "include": ["./src/**/*"],
+  "include": ["./src"],
   "exclude": ["node_modules"]
 }

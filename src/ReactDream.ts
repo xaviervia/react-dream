@@ -2,8 +2,6 @@ import setDisplayName from "recompose/setDisplayName";
 import recomposeDefaultProps from "recompose/defaultProps";
 import setPropTypes from "recompose/setPropTypes";
 import { flow, Endomorphism } from "fp-ts/lib/function";
-import withDebugger from "@hocs/with-debugger";
-import withLog from "@hocs/with-log";
 import doAp from "./internals/doAp";
 import doConcat from "./internals/doConcat";
 import doContramap from "./internals/doContramap";
@@ -14,11 +12,7 @@ import doTranslate from "./internals/doTranslate";
 import doScale from "./internals/doScale";
 import styleFromProps from "./styleFromProps";
 import { ComponentType, ValidationMap, CSSProperties } from "react";
-import { IO } from "fp-ts/lib/IO";
 import { Hoc } from "./types";
-
-// ALGEBRAS
-// ////////////////////////////////////////////////////////////////////////// //
 
 interface EnhancedProps {
   style?: {
@@ -57,14 +51,8 @@ export interface ReactDream<P extends EnhancedProps> {
   // fork : Component -> (Component -> a) -> a
   fork: <A>(extractComponent: (Component: ComponentType<P>) => A) => A;
 
-  // debug : Component -> () -> IO ReactDream
-  debug: IO<ReactDream<P>>;
-
   // defaultProps : Component -> (Props) -> ReactDream
   defaultProps: (props: P) => ReactDream<P>;
-
-  // log : Component -> (Props -> String) -> IO ReactDream
-  log: (messageFromProps: (props: P) => string) => ReactDream<P>;
 
   // name : Component -> String -> ReactDream
   name: (name: string) => ReactDream<P>;
@@ -85,7 +73,9 @@ export interface ReactDream<P extends EnhancedProps> {
   style: (getStyleFromProps: (props: P) => CSSProperties) => ReactDream<P>;
 
   // translate : Component -> (Props -> [Number]) -> ReactDream
-  translate: (getTranslateFromProps: (props: P) => number[]) => ReactDream<P>;
+  translate: (
+    getTranslateFromProps: (props: P) => Array<number | null>
+  ) => ReactDream<P>;
 }
 
 const ReactDream = <P>(Component: ComponentType<P>): ReactDream<P> => ({
@@ -105,13 +95,11 @@ const ReactDream = <P>(Component: ComponentType<P>): ReactDream<P> => ({
       ...props
     })),
   fork: extractComponent => extractComponent(Component),
-  debug: () => ReactDream(withDebugger(Component)),
   defaultProps: props =>
     ReactDream(
       (recomposeDefaultProps(props)(Component) as unknown) as ComponentType<P>
     ),
   name: flow(setDisplayName, ReactDream(Component).map),
-  log: messageFromProps => ReactDream(withLog(messageFromProps)(Component)),
   removeProps: (...propsToRemove) =>
     ReactDream(Component).contramap(props => {
       // Nasty but efficient
